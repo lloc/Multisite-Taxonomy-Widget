@@ -80,7 +80,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		foreach ( $taxonomies as $taxonomy ) {
 			printf(
 				'<option%s>%s</option>',
-				( isset( $instance['taxonomy'] ) && $taxonomy == $instance['taxonomy'] ? 'selected="selected"' : '' ),
+				( isset( $instance['taxonomy'] ) && $taxonomy == $instance['taxonomy'] ? ' selected="selected"' : '' ),
 				$taxonomy
 			);
 		}
