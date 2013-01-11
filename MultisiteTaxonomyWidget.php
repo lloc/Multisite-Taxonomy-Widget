@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Multisite Taxonomy Widget
-Plugin URI: http://lloc.de/multisite-taxonomy-widgets
+Plugin URI: http://lloc.de/
 Description: List the latest posts of a specific taxonomy from the whole blog-network 
 Version: 0.1
 Author: Dennis Ploetner 
@@ -112,7 +112,7 @@ function mtw_get_posts( $taxonomy, $name, $limit, array $posts ) {
 		$taxonomy        => $name,
 		'posts_per_page' => $limit,
 	);
-	$query = new WP_Query( $args2 );
+	$query = new WP_Query( $args );
 	while ( $query->have_posts() ) {
 		$query->next_post();
 		$temp        = new StdClass;
