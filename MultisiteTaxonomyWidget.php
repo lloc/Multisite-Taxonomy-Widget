@@ -12,9 +12,9 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 
 	public function __construct() {
 		parent::__construct(
-			'multisitetaxonomywidget',
-			'MultisiteTaxonomyWidget',
-			'Multisite Taxonomy'
+			'mtw',
+			'Multisite Taxonomy',
+			array( 'description' => __( 'List the latest posts of a specific taxonomy from the whole blog-network', 'mtw' ) )
 		);
 	}
 
@@ -64,14 +64,14 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 
 	public function form( $instance ) {
 		printf(
-			'<p><label for="%1$s">%2$s:</label> <input class="widefat" id="%1$s" name="%3$s" type="text" value="%4$s" /></p>',
+			'<p><label for="%1$s">%2$s</label> <input class="widefat" id="%1$s" name="%3$s" type="text" value="%4$s" /></p>',
 			$this->get_field_id( 'title' ),
 			__( 'Title:', 'mtw' ),
 			$this->get_field_name( 'title' ),
 			( isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '' )
 		);
 		printf(
-			'<p><label for="%1$s">%2$s:</label> <select id="%1$s" name="%3$s">',
+			'<p><label for="%1$s">%2$s</label> <select id="%1$s" name="%3$s">',
 			$this->get_field_id( 'taxonomy' ),
 			__( 'Taxonomy:', 'mtw' ),
 			$this->get_field_name( 'taxonomy' )
@@ -86,14 +86,14 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		}
 		echo '</select></p>';
 		printf(
-			'<p><label for="%1$s">%2$s:</label> <input class="widefat" id="%1$s" name="%3$s" type="text" value="%4$s" /></p>',
+			'<p><label for="%1$s">%2$s</label> <input class="widefat" id="%1$s" name="%3$s" type="text" value="%4$s" /></p>',
 			$this->get_field_id( 'name' ),
 			__( 'Name:', 'mtw' ),
 			$this->get_field_name( 'name' ),
 			( isset( $instance['name'] ) ? esc_attr( $instance['name'] ) : '' )
 		);
 		printf(
-			'<p><label for="%1$s">%2$s:</label> <input id="%1$s" name="%3$s" type="text" value="%4$s" /></p>',
+			'<p><label for="%1$s">%2$s</label> <input class="widefat" id="%1$s" name="%3$s" type="text" value="%4$s" /></p>',
 			$this->get_field_id( 'limit' ),
 			__( 'Limit:', 'mtw' ),
 			$this->get_field_name( 'limit' ),
