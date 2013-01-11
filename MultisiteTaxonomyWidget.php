@@ -21,14 +21,14 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		global $wpdb;
 		extract( $args );
-		$posts = mtw_get_posts( $taxonomy, $name, $limit, array() );
+		$posts = mtw_get_posts( $instance, array() );
 		$blogs = $wpdb->get_col(
 			"SELECT blog_id FROM {$wpdb->blogs} WHERE WHERE blog_id != {$wpdb->blogid} AND WHERE blog_id != {$wpdb->blogid} AND site_id = {$wpdb->siteid} AND spam = 0 AND deleted = 0 AND archived = '0'"
 		);
 		if ( $blogs ) {
 			foreach ( $blogs as $blog_id ) {
 				switch_to_blog( $blog_id );
-				$posts = mtw_get_posts( $taxonomy, $name, $limit, $posts );
+				$posts = mtw_get_posts( $instance, $posts );
 				restore_current_blog();
 			}
 		}
@@ -105,8 +105,8 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 }
 add_action( 'widgets_init', create_function( '', 'register_widget( "MultisiteTaxonomyWidget" );' ) );
 
-function mtw_get_posts( $taxonomy, $name, $limit, array $posts ) {
-	$limit = (int) $limit;
+function mtw_get_posts( $instance, array $posts ) {
+	extract( $instance );
 	$args  = array(
 		'post_type'      => 'any',
 		$taxonomy        => $name,
