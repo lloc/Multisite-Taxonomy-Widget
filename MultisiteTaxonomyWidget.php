@@ -102,6 +102,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	}
 
 }
+add_action( 'widgets_init', create_function( '', 'register_widget( "MultisiteTaxonomyWidget" );' ) );
 
 function mtw_get_posts( $taxonomy, $name, $limit, array $posts ) {
 	$limit = (int) $limit;
