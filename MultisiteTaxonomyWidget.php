@@ -109,7 +109,13 @@ function mtw_get_posts( $instance, array $posts ) {
 	extract( $instance );
 	$args  = array(
 		'post_type'      => 'any',
-		$taxonomy        => $name,
+		'tax_query' => array(
+			array(
+				'taxonomy' => $taxonomy,
+				'field' => 'slug',
+				'terms' => $name,
+			),
+		),
 		'posts_per_page' => $limit,
 	);
 	$query = new WP_Query( $args );
