@@ -108,7 +108,7 @@ add_action( 'widgets_init', create_function( '', 'register_widget( "MultisiteTax
 function mtw_get_posts( $instance, array $posts ) {
 	extract( $instance );
 	$args  = array(
-		'post_type'      => 'any',
+		'post_type' => 'any',
 		'tax_query' => array(
 			array(
 				'taxonomy' => $taxonomy,
