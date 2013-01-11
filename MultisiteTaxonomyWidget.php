@@ -77,11 +77,12 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			$this->get_field_name( 'taxonomy' )
 		);
 		$taxonomies = get_taxonomies( array( 'public' => true ), 'names' ); 
-		foreach ( $taxonomies as $taxonomy ) {
+		foreach ( $taxonomies as $key => $value ) {
 			printf(
-				'<option%s>%s</option>',
-				( isset( $instance['taxonomy'] ) && $taxonomy == $instance['taxonomy'] ? ' selected="selected"' : '' ),
-				$taxonomy
+				'<option value="%s"%s>%s</option>',
+				$key,
+				( isset( $instance['taxonomy'] ) && $key == $instance['taxonomy'] ? ' selected="selected"' : '' ),
+				$value
 			);
 		}
 		echo '</select></p>';
