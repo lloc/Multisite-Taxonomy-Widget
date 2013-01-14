@@ -165,3 +165,4 @@ function mtw_create_shortcode( $atts ) {
 	}
 	return $content;
 }
+add_shortcode( 'mtw_posts', 'mtw_create_shortcode' );
