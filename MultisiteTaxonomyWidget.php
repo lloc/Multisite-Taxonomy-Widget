@@ -30,11 +30,19 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		if ( $posts ) { 
 			echo '<ul>';
 			foreach ( $posts as $post ) {
-				printf(
-					'<li><a href="%s">%s</a></li>',
-					$post->post_link,
-					apply_filters( 'the_title', $post->post_title )
-				);
+				if ( has_filter( 'mtw_widget_output_filter' ) ) {
+					echo apply_filters( 
+						'mtw_widget_output_filter',
+						$post
+					);
+				}
+				else {
+					printf(
+						'<li><a href="%s">%s</a></li>',
+						$post->post_link,
+						apply_filters( 'the_title', $post->post_title )
+					);
+				}
 			}
 			echo '</ul>';
 		}
@@ -155,11 +163,19 @@ function mtw_create_shortcode( $atts ) {
 	if ( $posts ) {
 		$content = '<ul>';
 		foreach ( $posts as $post ) {
-			$content .= sprintf(
-				'<li><a href="%s">%s</a></li>',
-				$post->post_link,
-				apply_filters( 'the_title', $post->post_title )
-			);
+			if ( has_filter( 'mtw_shortcode_output_filter' ) ) {
+				$content .= apply_filters( 
+					'mtw_shortcode_output_filter',
+					$post
+				);
+			}
+			else {
+				$content .= sprintf(
+					'<li><a href="%s">%s</a></li>',
+					$post->post_link,
+					apply_filters( 'the_title', $post->post_title )
+				);
+			}
 		}
 		$content .= '</ul>';
 	}
