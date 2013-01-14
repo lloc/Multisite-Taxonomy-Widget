@@ -45,7 +45,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 				printf(
 					'<li><a href="%s">%s</a></li>',
 					$post->post_link,
-					apply_filters( 'the_title', $post->post_title ),
+					apply_filters( 'the_title', $post->post_title )
 				);
 			}
 			echo '</ul>';
