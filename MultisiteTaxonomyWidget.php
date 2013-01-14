@@ -3,7 +3,7 @@
 Plugin Name: Multisite Taxonomy Widget
 Plugin URI: http://lloc.de/
 Description: List the latest posts of a specific taxonomy from the whole blog-network 
-Version: 0.1
+Version: 0.2
 Author: Dennis Ploetner 
 Author URI: http://lloc.de/
 */
@@ -127,14 +127,23 @@ function mtw_get_posts( $instance, array $posts ) {
 		$temp->href  = get_permalink( $query->post->ID );
 		$posts[]     = $temp;
 	}
-	usort( $posts, 'mta_cmp_posts' );
+	usort( $posts, 'mtw_cmp_posts' );
 	wp_reset_query();
 	wp_reset_postdata();
 	return( array_slice( $posts, 0, $limit ) );
 }
 
-function mta_cmp_posts( $a, $b ) {
-    if ( $a->time == $b->time )
-        return 0;
-    return( $a->time > $b->time ) ? (-1) : 1;
+function mtw_cmp_posts( $a, $b ) {
+	if ( $a->time == $b->time )
+		return 0;
+	return( $a->time > $b->time ) ? (-1) : 1;
 }
+
+function mtw_plugin_init() {
+	load_plugin_textdomain(
+		'mtw',
+		false,
+		dirname( plugin_basename( __FILE__ ) ) . '/languages/'
+	);
+}
+add_action( 'init', 'mtw_plugin_init' );
