@@ -44,8 +44,8 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			foreach ( $posts as $post ) {
 				printf(
 					'<li><a href="%s">%s</a></li>',
-					$post->href,
-					$post->title
+					$post->post_link,
+					apply_filters( 'the_title', $post->post_title ),
 				);
 			}
 			echo '</ul>';
@@ -120,10 +120,9 @@ function mtw_get_posts( $instance, array $posts ) {
 	$query = new WP_Query( $args );
 	while ( $query->have_posts() ) {
 		$query->next_post();
-		$query->timestamp = get_the_time( 'U', $query->post->ID );
-		$query->title     = get_the_title( $query->post->ID );
-		$query->href      = get_permalink( $query->post->ID );
-		$posts[]          = $query;
+		$query->post->timestamp = get_the_time( 'U', $query->post->ID );
+		$query->post->post_link = get_permalink( $query->post->ID );
+		$posts[] = $query->post;
 	}
 	usort( $posts, 'mtw_cmp_posts' );
 	wp_reset_query();
