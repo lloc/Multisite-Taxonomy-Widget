@@ -19,18 +19,6 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
-		global $wpdb;
-		$posts = mtw_get_posts( $instance, array() );
-		$blogs = $wpdb->get_col(
-			"SELECT blog_id FROM {$wpdb->blogs} WHERE blog_id != {$wpdb->blogid} AND site_id = {$wpdb->siteid} AND spam = 0 AND deleted = 0 AND archived = '0'"
-		);
-		if ( $blogs ) {
-			foreach ( $blogs as $blog_id ) {
-				switch_to_blog( $blog_id );
-				$posts = mtw_get_posts( $instance, $posts );
-				restore_current_blog();
-			}
-		}
 		echo $args['before_widget'];
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		if ( $title ) {
@@ -38,7 +26,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			echo $title;
 			echo $args['after_title'];
 		}
-		print_r( $posts );
+		$posts = mtw_get_posts_from_blogs( $instance );
 		if ( $posts ) { 
 			echo '<ul>';
 			foreach ( $posts as $post ) {
@@ -136,6 +124,22 @@ function mtw_cmp_posts( $a, $b ) {
 	return( $a->timestamp > $b->timestamp ? (-1) : 1 );
 }
 
+function mtw_get_posts_from_blogs( $instance ) {
+	global $wpdb;
+	$posts = mtw_get_posts( $instance, array() );
+	$blogs = $wpdb->get_col(
+		"SELECT blog_id FROM {$wpdb->blogs} WHERE blog_id != {$wpdb->blogid} AND site_id = {$wpdb->siteid} AND spam = 0 AND deleted = 0 AND archived = '0'"
+	);
+	if ( $blogs ) {
+		foreach ( $blogs as $blog_id ) {
+			switch_to_blog( $blog_id );
+			$posts = mtw_get_posts( $instance, $posts );
+			restore_current_blog();
+		}
+	}
+	return $posts;
+}
+
 function mtw_plugin_init() {
 	load_plugin_textdomain(
 		'mtw',
@@ -146,5 +150,18 @@ function mtw_plugin_init() {
 add_action( 'init', 'mtw_plugin_init' );
 
 function mtw_create_shortcode( $atts ) {
-	
+	$posts = mtw_get_posts_from_blogs( $atts );
+	$content = '';
+	if ( $posts ) {
+		$content = '<ul>';
+		foreach ( $posts as $post ) {
+			$content .= sprintf(
+				'<li><a href="%s">%s</a></li>',
+				$post->post_link,
+				apply_filters( 'the_title', $post->post_title )
+			);
+		}
+		$content .= '</ul>';
+	}
+	return $content;
 }
