@@ -132,9 +132,9 @@ function mtw_get_posts( $instance, array $posts ) {
 }
 
 function mtw_cmp_posts( $a, $b ) {
-	if ( $a->time == $b->time )
+	if ( $a->timestamp == $b->timestamp )
 		return 0;
-	return( $a->time > $b->time ) ? (-1) : 1;
+	return( $a->timestamp > $b->timestamp ? (-1) : 1 );
 }
 
 function mtw_plugin_init() {
