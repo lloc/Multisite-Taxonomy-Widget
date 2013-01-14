@@ -3,7 +3,7 @@
 Plugin Name: Multisite Taxonomy Widget
 Plugin URI: http://lloc.de/
 Description: List the latest posts of a specific taxonomy from the whole blog-network 
-Version: 0.2
+Version: 0.3
 Author: Dennis Ploetner 
 Author URI: http://lloc.de/
 */
@@ -20,10 +20,9 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 		global $wpdb;
-		extract( $args );
 		$posts = mtw_get_posts( $instance, array() );
 		$blogs = $wpdb->get_col(
-			"SELECT blog_id FROM {$wpdb->blogs} WHERE WHERE blog_id != {$wpdb->blogid} AND WHERE blog_id != {$wpdb->blogid} AND site_id = {$wpdb->siteid} AND spam = 0 AND deleted = 0 AND archived = '0'"
+			"SELECT blog_id FROM {$wpdb->blogs} WHERE WHERE blog_id != {$wpdb->blogid} AND site_id = {$wpdb->siteid} AND spam = 0 AND deleted = 0 AND archived = '0'"
 		);
 		if ( $blogs ) {
 			foreach ( $blogs as $blog_id ) {
@@ -32,13 +31,14 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 				restore_current_blog();
 			}
 		}
-		echo $before_widget;
+		echo $args['before_widget'];
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		if ( $title ) {
-			echo $before_title;
+			echo $args['before_title'];
 			echo $title;
-			echo $after_title;
+			echo $args['after_title'];
 		}
+		print_r( $posts );
 		if ( $posts ) { 
 			echo '<ul>';
 			foreach ( $posts as $post ) {
@@ -50,7 +50,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			}
 			echo '</ul>';
 		}
-		echo $after_widget;
+		echo $args['after_widget'];
 	}
 
 	public function update( $new_instance, $old_instance ) {
@@ -106,31 +106,29 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 add_action( 'widgets_init', create_function( '', 'register_widget( "MultisiteTaxonomyWidget" );' ) );
 
 function mtw_get_posts( $instance, array $posts ) {
-	extract( $instance );
 	$args  = array(
 		'post_type' => 'any',
 		'tax_query' => array(
 			array(
-				'taxonomy' => $taxonomy,
+				'taxonomy' => $instance['taxonomy'],
 				'field' => 'slug',
-				'terms' => $name,
+				'terms' => sanitize title( $instance['name'] ),
 			),
 		),
-		'posts_per_page' => $limit,
+		'posts_per_page' => $instance['limit'],
 	);
 	$query = new WP_Query( $args );
 	while ( $query->have_posts() ) {
 		$query->next_post();
-		$temp        = new StdClass;
-		$temp->time  = get_the_time( 'U', $query->post->ID );
-		$temp->title = get_the_title( $query->post->ID );
-		$temp->href  = get_permalink( $query->post->ID );
-		$posts[]     = $temp;
+		$query->timestamp = get_the_time( 'U', $query->post->ID );
+		$query->title     = get_the_title( $query->post->ID );
+		$query->href      = get_permalink( $query->post->ID );
+		$posts[]          = $query;
 	}
 	usort( $posts, 'mtw_cmp_posts' );
 	wp_reset_query();
 	wp_reset_postdata();
-	return( array_slice( $posts, 0, $limit ) );
+	return( array_slice( $posts, 0, $instance['limit'] ) );
 }
 
 function mtw_cmp_posts( $a, $b ) {
@@ -147,3 +145,7 @@ function mtw_plugin_init() {
 	);
 }
 add_action( 'init', 'mtw_plugin_init' );
+
+function mtw_create_shortcode( $atts ) {
+	
+}
