@@ -146,4 +146,4 @@ function mtw_plugin_init() {
 		dirname( plugin_basename( __FILE__ ) ) . '/languages/'
 	);
 }
-add_action( 'init', 'mtw_plugin_init' );
+add_action( 'admin_init', 'mtw_plugin_init' );
