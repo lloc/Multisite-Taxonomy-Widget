@@ -22,7 +22,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		global $wpdb;
 		$posts = mtw_get_posts( $instance, array() );
 		$blogs = $wpdb->get_col(
-			"SELECT blog_id FROM {$wpdb->blogs} WHERE WHERE blog_id != {$wpdb->blogid} AND site_id = {$wpdb->siteid} AND spam = 0 AND deleted = 0 AND archived = '0'"
+			"SELECT blog_id FROM {$wpdb->blogs} WHERE blog_id != {$wpdb->blogid} AND site_id = {$wpdb->siteid} AND spam = 0 AND deleted = 0 AND archived = '0'"
 		);
 		if ( $blogs ) {
 			foreach ( $blogs as $blog_id ) {
@@ -112,7 +112,7 @@ function mtw_get_posts( $instance, array $posts ) {
 			array(
 				'taxonomy' => $instance['taxonomy'],
 				'field' => 'slug',
-				'terms' => sanitize title( $instance['name'] ),
+				'terms' => sanitize_title( $instance['name'] ),
 			),
 		),
 		'posts_per_page' => $instance['limit'],
