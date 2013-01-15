@@ -26,7 +26,7 @@ built-in or custom taxonomy.
 == Changelog ==
 
 = 0.4 =
-* Shortcode [mtw_posts] modified. You can add a thumbnail-param too. For example: [mtw_posts taxonomy="post_tag" name="test" limit="5" thumbnail="64"]
+* Thumbnails to the output added
 
 = 0.3 =
 * Shortcode [mtw_posts] is now available. You can use taxonomy, name and limit as parameters

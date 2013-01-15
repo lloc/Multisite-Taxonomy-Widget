@@ -41,7 +41,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 				else {
 					printf(
 						'%s<a href="%s">%s</a>',
-						( !empty( $instance['thumbnail'] ) ? $post->mtw_thumb : '' ),
+						$post->mtw_thumb,
 						$post->mtw_href,
 						apply_filters( 'the_title', $post->post_title )
 					);
@@ -54,12 +54,11 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance              = $old_instance;
-		$instance['title']     = strip_tags( $new_instance['title'] );
-		$instance['taxonomy']  = strip_tags( $new_instance['taxonomy'] );
-		$instance['name']      = strip_tags( $new_instance['name'] );
-		$instance['limit']     = (int) $new_instance['limit'];
-		$instance['thumbnail'] = (int) $new_instance['thumbnail'];
+		$instance             = $old_instance;
+		$instance['title']    = strip_tags( $new_instance['title'] );
+		$instance['taxonomy'] = strip_tags( $new_instance['taxonomy'] );
+		$instance['name']     = strip_tags( $new_instance['name'] );
+		$instance['limit']    = (int) $new_instance['limit'];
 		return $instance;
 	}
 
@@ -101,21 +100,6 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			$this->get_field_name( 'limit' ),
 			( isset( $instance['limit'] ) ? (int) $instance['limit'] : 10 )
 		);
-		printf(
-			'<p><label for="%1$s">%2$s</label> <select class="widefat" id="%1$s" name="%3$s">',
-			$this->get_field_id( 'thumbnail' ),
-			__( 'Thumbnail:', 'mtw' ),
-			$this->get_field_name( 'thumbnail' )
-		);
-		foreach ( array( 0, 32, 48, 64, 80 ) as $thumbnail ) {
-			printf(
-				'<option value="%s"%s>%s</option>',
-				$thumbnail,
-				( isset( $instance['thumbnail'] ) && $thumbnail == $instance['thumbnail'] ? ' selected="selected"' : '' ),
-				( 0 == $thumbnail ? __( 'No thumbnail', 'mtw' ) : $thumbnail . ' x ' . $thumbnail )
-			);
-		}
-		echo '</select></p>';
 	}
 
 }
@@ -133,16 +117,12 @@ function mtw_get_posts( $instance, array $posts ) {
 		),
 		'posts_per_page' => $instance['limit'],
 	);
-	$query   = new WP_Query( $args );
-	$ts_size = ( !empty( $instance['thumbnail'] ) ?
-		array( $instance['thumbnail'], $instance['thumbnail'] ) :
-		'thumbnail'
-	);
+	$query = new WP_Query( $args );
 	while ( $query->have_posts() ) {
 		$query->next_post();
 		$query->post->mtw_ts    = get_the_time( 'U', $query->post->ID );
 		$query->post->mtw_href  = get_permalink( $query->post->ID );
-		$query->post->mtw_thumb = get_the_post_thumbnail( $query->post->ID, $ts_size );
+		$query->post->mtw_thumb = get_the_post_thumbnail( $query->post->ID, 'thumbnail' );
 		$posts[] = $query->post;
 	}
 	usort( $posts, 'mtw_cmp_posts' );
@@ -199,7 +179,7 @@ function mtw_create_shortcode( $atts ) {
 			else {
 				$content .= sprintf(
 					'%s<a href="%s">%s</a>',
-					( !empty( $atts['thumbnail'] ) ? $post->mtw_thumb : '' ),
+					$post->mtw_thumb,
 					$post->mtw_href,
 					apply_filters( 'the_title', $post->post_title )
 				);
