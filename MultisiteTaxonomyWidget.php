@@ -190,8 +190,8 @@ function mtw_create_shortcode( $atts ) {
 			}
 			else {
 				$content .= sprintf(
-					'%s<a href="%s">%s</a>',
-					( !empty( $atts['thumbnail'] ) ? $post->mtw_thumb : '' ),
+					'%s <a href="%s">%s</a>',
+					mtw_get_thumbnail( $post, $atts ),
 					$post->mtw_href,
 					apply_filters( 'the_title', $post->post_title )
 				);
@@ -203,3 +203,21 @@ function mtw_create_shortcode( $atts ) {
 	return $content;
 }
 add_shortcode( 'mtw_posts', 'mtw_create_shortcode' );
+
+function mtw_get_thumbnail( $post, $atts ) {
+	if ( !empty( $atts['thumbnail'] ) ) {
+		if ( has_filter( 'mtw_thumbnail_output_filter' ) ) {
+			return apply_filters(
+				'mtw_thumbnail_output_filter',
+				$post,
+				$atts
+			);
+		}
+		return sprintf(
+			'<a href="%s">%s</a>',
+			$post->mtw_href,
+			$post->mtw_thumb
+		);
+	}
+	return '';
+}
