@@ -40,7 +40,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 					printf(
 						'<li>%s<a href="%s">%s</a></li>',
 						$post->mtw_thumb,
-						$post->mtw_link,
+						$post->mtw_href,
 						apply_filters( 'the_title', $post->post_title )
 					);
 				}
@@ -117,8 +117,8 @@ function mtw_get_posts( $instance, array $posts ) {
 	$query = new WP_Query( $args );
 	while ( $query->have_posts() ) {
 		$query->next_post();
-		$query->post->mtw_time  = get_the_time( 'U', $query->post->ID );
-		$query->post->mtw_link  = get_permalink( $query->post->ID );
+		$query->post->mtw_ts    = get_the_time( 'U', $query->post->ID );
+		$query->post->mtw_href  = get_permalink( $query->post->ID );
 		$query->post->mtw_thumb = get_the_post_thumbnail( $query->post->ID, 'thumbnail' );
 		$posts[] = $query->post;
 	}
@@ -129,9 +129,9 @@ function mtw_get_posts( $instance, array $posts ) {
 }
 
 function mtw_cmp_posts( $a, $b ) {
-	if ( $a->mtw_times == $b->mtw_time )
+	if ( $a->mtw_ts == $b->mtw_ts )
 		return 0;
-	return( $a->mtw_time > $b->mtw_time ? (-1) : 1 );
+	return( $a->mtw_ts > $b->mtw_ts ? (-1) : 1 );
 }
 
 function mtw_get_posts_from_blogs( $instance ) {
@@ -175,7 +175,7 @@ function mtw_create_shortcode( $atts ) {
 				$content .= sprintf(
 					'<li>%s<a href="%s">%s</a></li>',
 					$post->mtw_thumb,
-					$post->mtw_link,
+					$post->mtw_href,
 					apply_filters( 'the_title', $post->post_title )
 				);
 			}
