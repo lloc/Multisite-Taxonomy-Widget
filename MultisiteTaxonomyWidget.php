@@ -112,7 +112,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 				'<option value="%s"%s>%s</option>',
 				$thumbnail,
 				( isset( $instance['thumbnail'] ) && $thumbnail == $instance['thumbnail'] ? ' selected="selected"' : '' ),
-				( 0 == $thumbnail ? __( 'No thumbnail', 'mtw' ) : $thumbnail . 'x' . $thumbnail )
+				( 0 == $thumbnail ? __( 'No thumbnail', 'mtw' ) : $thumbnail . ' x ' . $thumbnail )
 			);
 		}
 		echo '</select></p>';
