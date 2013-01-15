@@ -41,7 +41,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 				else {
 					printf(
 						'%s<a href="%s">%s</a>',
-						( !empty( $instance['thumbnail' ) ? $post->mtw_thumb : '' ),
+						( !empty( $instance['thumbnail'] ) ? $post->mtw_thumb : '' ),
 						$post->mtw_href,
 						apply_filters( 'the_title', $post->post_title )
 					);
@@ -194,12 +194,12 @@ function mtw_create_shortcode( $atts ) {
 					'mtw_shortcode_output_filter',
 					$post,
 					$atts
-				) ;
+				);
 			}
 			else {
 				$content .= sprintf(
 					'%s<a href="%s">%s</a>',
-					( !empty( $atts['thumbnail' ) ? $post->mtw_thumb : '' ),
+					( !empty( $atts['thumbnail'] ) ? $post->mtw_thumb : '' ),
 					$post->mtw_href,
 					apply_filters( 'the_title', $post->post_title )
 				);
