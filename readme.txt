@@ -4,7 +4,7 @@ Donate link: http://www.greenpeace.org/international/en/supportus/
 Tags: multisite, recent posts, taxonomy, category, tag, widget
 Requires at least: 3.2.1
 Tested up to: 3.6
-Stable tag: 0.3
+Stable tag: 0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,8 +25,11 @@ built-in or custom taxonomy.
 
 == Changelog ==
 
+= 0.4 =
+* Shortcode [mtw_posts] modified. You can add a thumbnail-param too. For example: [mtw_posts taxonomy="post_tag" name="test" limit="5" thumbnail="64"]
+
 = 0.3 =
-* Shortcode [mtw_posts] is now available. You can use taxonomy, name, limit and thumbnail as parameters
+* Shortcode [mtw_posts] is now available. You can use taxonomy, name and limit as parameters
 * Filters added: You can override the output using `mtw_shortcode_output_filter` or `mtw_widget_output_filter` 
 
 = 0.2 =

@@ -3,7 +3,7 @@
 Plugin Name: Multisite Taxonomy Widget
 Plugin URI: http://lloc.de/
 Description: List the latest posts of a specific taxonomy from the whole blog-network 
-Version: 0.3
+Version: 0.4
 Author: Dennis Ploetner 
 Author URI: http://lloc.de/
 */
@@ -30,20 +30,23 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		if ( $posts ) { 
 			echo '<ul>';
 			foreach ( $posts as $post ) {
+				echo '<li>';
 				if ( has_filter( 'mtw_widget_output_filter' ) ) {
 					echo apply_filters(
 						'mtw_widget_output_filter',
-						$post
+						$post,
+						$instance
 					);
 				}
 				else {
 					printf(
-						'<li>%s<a href="%s">%s</a></li>',
-						$post->mtw_thumb,
+						'%s<a href="%s">%s</a>',
+						( !empty( $instance['thumbnail' ) ? $post->mtw_thumb : '' ),
 						$post->mtw_href,
 						apply_filters( 'the_title', $post->post_title )
 					);
 				}
+				echo '</li>';
 			}
 			echo '</ul>';
 		}
@@ -51,11 +54,12 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance             = $old_instance;
-		$instance['title']    = strip_tags( $new_instance['title'] );
-		$instance['taxonomy'] = strip_tags( $new_instance['taxonomy'] );
-		$instance['name']     = strip_tags( $new_instance['name'] );
-		$instance['limit']    = (int) $new_instance['limit'];
+		$instance              = $old_instance;
+		$instance['title']     = strip_tags( $new_instance['title'] );
+		$instance['taxonomy']  = strip_tags( $new_instance['taxonomy'] );
+		$instance['name']      = strip_tags( $new_instance['name'] );
+		$instance['limit']     = (int) $new_instance['limit'];
+		$instance['thumbnail'] = (int) $new_instance['thumbnail'];
 		return $instance;
 	}
 
@@ -68,7 +72,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			( isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '' )
 		);
 		printf(
-			'<p><label for="%1$s">%2$s</label> <select id="%1$s" name="%3$s">',
+			'<p><label for="%1$s">%2$s</label> <select class="widefat" id="%1$s" name="%3$s">',
 			$this->get_field_id( 'taxonomy' ),
 			__( 'Taxonomy:', 'mtw' ),
 			$this->get_field_name( 'taxonomy' )
@@ -98,7 +102,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			( isset( $instance['limit'] ) ? (int) $instance['limit'] : 10 )
 		);
 		printf(
-			'<p><label for="%1$s">%2$s</label> <select id="%1$s" name="%3$s">',
+			'<p><label for="%1$s">%2$s</label> <select class="widefat" id="%1$s" name="%3$s">',
 			$this->get_field_id( 'thumbnail' ),
 			__( 'Thumbnail:', 'mtw' ),
 			$this->get_field_name( 'thumbnail' )
@@ -184,20 +188,23 @@ function mtw_create_shortcode( $atts ) {
 	if ( $posts ) {
 		$content = '<ul>';
 		foreach ( $posts as $post ) {
+			$content .= '<li>';
 			if ( has_filter( 'mtw_shortcode_output_filter' ) ) {
 				$content .= apply_filters(
 					'mtw_shortcode_output_filter',
-					$post
-				);
+					$post,
+					$atts
+				) ;
 			}
 			else {
 				$content .= sprintf(
-					'<li>%s<a href="%s">%s</a></li>',
-					$post->mtw_thumb,
+					'%s<a href="%s">%s</a>',
+					( !empty( $atts['thumbnail' ) ? $post->mtw_thumb : '' ),
 					$post->mtw_href,
 					apply_filters( 'the_title', $post->post_title )
 				);
 			}
+			$content .= '</li>';
 		}
 		$content .= '</ul>';
 	}
