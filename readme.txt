@@ -26,7 +26,7 @@ built-in or custom taxonomy.
 == Changelog ==
 
 = 0.3 =
-* Shortcode [mtw_posts] is now available. You can use taxonomy, name and limit as parameters
+* Shortcode [mtw_posts] is now available. You can use taxonomy, name, limit and thumbnail as parameters
 * Filters added: You can override the output using `mtw_shortcode_output_filter` or `mtw_widget_output_filter` 
 
 = 0.2 =
