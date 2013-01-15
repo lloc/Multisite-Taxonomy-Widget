@@ -21,7 +21,7 @@ built-in or custom taxonomy.
 1. Download the plugin and uncompress it with your preferred unzip programme 
 2. Copy the entire directory in your plugin directory of your WordPress blog (/wp-content/plugins) 
 3. Activate the plugin through the 'Plugins' menu in WordPress
-4. Place the Multisite Taxonomy Widget in any widgetized area
+4. Place the Multisite Taxonomy Widget in any widgetized area or use the shortcode [mtw_posts]
 
 == Changelog ==
 
