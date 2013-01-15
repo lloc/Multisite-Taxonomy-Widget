@@ -97,6 +97,21 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			$this->get_field_name( 'limit' ),
 			( isset( $instance['limit'] ) ? (int) $instance['limit'] : 10 )
 		);
+		printf(
+			'<p><label for="%1$s">%2$s</label> <select id="%1$s" name="%3$s">',
+			$this->get_field_id( 'thumbnail' ),
+			__( 'Thumbnail:', 'mtw' ),
+			$this->get_field_name( 'thumbnail' )
+		);
+		foreach ( array( 0, 32, 48, 64, 80 ) as $thumbnail ) {
+			printf(
+				'<option value="%s"%s>%s</option>',
+				$thumbnail,
+				( isset( $instance['thumbnail'] ) && $thumbnail == $instance['thumbnail'] ? ' selected="selected"' : '' ),
+				( 0 == $thumbnail ? __( 'No thumbnail', 'mtw' ) : $thumbnail . 'x' . $thumbnail )
+			);
+		}
+		echo '</select></p>';
 	}
 
 }
@@ -114,12 +129,16 @@ function mtw_get_posts( $instance, array $posts ) {
 		),
 		'posts_per_page' => $instance['limit'],
 	);
-	$query = new WP_Query( $args );
+	$query   = new WP_Query( $args );
+	$ts_size = ( !empty( $instance['thumbnail'] ) ?
+		array( $instance['thumbnail'], $instance['thumbnail'] ) :
+		'thumbnail'
+	);
 	while ( $query->have_posts() ) {
 		$query->next_post();
 		$query->post->mtw_ts    = get_the_time( 'U', $query->post->ID );
 		$query->post->mtw_href  = get_permalink( $query->post->ID );
-		$query->post->mtw_thumb = get_the_post_thumbnail( $query->post->ID, 'thumbnail' );
+		$query->post->mtw_thumb = get_the_post_thumbnail( $query->post->ID, $ts_size );
 		$posts[] = $query->post;
 	}
 	usort( $posts, 'mtw_cmp_posts' );
