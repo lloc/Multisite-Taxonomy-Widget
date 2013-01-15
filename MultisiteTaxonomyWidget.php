@@ -40,8 +40,8 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 				}
 				else {
 					printf(
-						'%s<a href="%s">%s</a>',
-						( !empty( $instance['thumbnail'] ) ? $post->mtw_thumb : '' ),
+						'%s <a href="%s">%s</a>',
+						mtw_get_thumbnail( $post, $instance ),
 						$post->mtw_href,
 						apply_filters( 'the_title', $post->post_title )
 					);
