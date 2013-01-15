@@ -31,15 +31,16 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			echo '<ul>';
 			foreach ( $posts as $post ) {
 				if ( has_filter( 'mtw_widget_output_filter' ) ) {
-					echo apply_filters( 
+					echo apply_filters(
 						'mtw_widget_output_filter',
 						$post
 					);
 				}
 				else {
 					printf(
-						'<li><a href="%s">%s</a></li>',
-						$post->post_link,
+						'<li>%s<a href="%s">%s</a></li>',
+						$post->mtw_thumb,
+						$post->mtw_link,
 						apply_filters( 'the_title', $post->post_title )
 					);
 				}
@@ -116,8 +117,9 @@ function mtw_get_posts( $instance, array $posts ) {
 	$query = new WP_Query( $args );
 	while ( $query->have_posts() ) {
 		$query->next_post();
-		$query->post->timestamp = get_the_time( 'U', $query->post->ID );
-		$query->post->post_link = get_permalink( $query->post->ID );
+		$query->post->mtw_time  = get_the_time( 'U', $query->post->ID );
+		$query->post->mtw_link  = get_permalink( $query->post->ID );
+		$query->post->mtw_thumb = get_the_post_thumbnail( $query->post->ID, 'thumbnail' );
 		$posts[] = $query->post;
 	}
 	usort( $posts, 'mtw_cmp_posts' );
@@ -127,9 +129,9 @@ function mtw_get_posts( $instance, array $posts ) {
 }
 
 function mtw_cmp_posts( $a, $b ) {
-	if ( $a->timestamp == $b->timestamp )
+	if ( $a->mtw_times == $b->mtw_time )
 		return 0;
-	return( $a->timestamp > $b->timestamp ? (-1) : 1 );
+	return( $a->mtw_time > $b->mtw_time ? (-1) : 1 );
 }
 
 function mtw_get_posts_from_blogs( $instance ) {
@@ -158,21 +160,22 @@ function mtw_plugin_init() {
 add_action( 'init', 'mtw_plugin_init' );
 
 function mtw_create_shortcode( $atts ) {
-	$posts = mtw_get_posts_from_blogs( $atts );
+	$posts   = mtw_get_posts_from_blogs( $atts );
 	$content = '';
 	if ( $posts ) {
 		$content = '<ul>';
 		foreach ( $posts as $post ) {
 			if ( has_filter( 'mtw_shortcode_output_filter' ) ) {
-				$content .= apply_filters( 
+				$content .= apply_filters(
 					'mtw_shortcode_output_filter',
 					$post
 				);
 			}
 			else {
 				$content .= sprintf(
-					'<li><a href="%s">%s</a></li>',
-					$post->post_link,
+					'<li>%s<a href="%s">%s</a></li>',
+					$post->mtw_thumb,
+					$post->mtw_link,
 					apply_filters( 'the_title', $post->post_title )
 				);
 			}
