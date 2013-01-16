@@ -2,8 +2,8 @@
 /*
 Plugin Name: Multisite Taxonomy Widget
 Plugin URI: http://lloc.de/
-Description: List the latest posts of a specific taxonomy from the whole blog-network 
-Version: 0.4
+Description: List the latest posts of a specific taxonomy from your blog-network.
+Version: 0.5
 Author: Dennis Ploetner 
 Author URI: http://lloc.de/
 */
@@ -19,6 +19,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
+		$args = mtw_get_formatelements( $args );
 		echo $args['before_widget'];
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		if ( $title ) {
@@ -28,9 +29,9 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		}
 		$posts = mtw_get_posts_from_blogs( $instance );
 		if ( $posts ) { 
-			echo '<ul>';
+			echo $args['before_mtw_list'];
 			foreach ( $posts as $post ) {
-				echo '<li>';
+				echo $args['before_mtw_item'];
 				if ( has_filter( 'mtw_widget_output_filter' ) ) {
 					echo apply_filters(
 						'mtw_widget_output_filter',
@@ -46,9 +47,9 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 						apply_filters( 'the_title', $post->post_title )
 					);
 				}
-				echo '</li>';
+				echo $args['after_mtw_item'];
 			}
-			echo '</ul>';
+			echo $args['after_mtw_list'];
 		}
 		echo $args['after_widget'];
 	}
@@ -204,7 +205,7 @@ function mtw_create_shortcode( $atts ) {
 }
 add_shortcode( 'mtw_posts', 'mtw_create_shortcode' );
 
-function mtw_get_thumbnail( $post, $atts ) {
+function mtw_get_thumbnail( $post, array $atts ) {
 	if ( !empty( $atts['thumbnail'] ) ) {
 		if ( has_filter( 'mtw_thumbnail_output_filter' ) ) {
 			return apply_filters(
@@ -220,4 +221,12 @@ function mtw_get_thumbnail( $post, $atts ) {
 		);
 	}
 	return '';
+}
+
+function mtw_get_formatelements( array $args ) {
+	$args['before_mtw_list'] = '<ul>';
+	$args['after_mtw_list']  = '</ul>';
+	$args['before_mtw_item'] = '<li>';
+	$args['after_mtw_item']  = '</li>';
+	return apply_filters( 'mtw_formatelements_output_filter', $args );
 }

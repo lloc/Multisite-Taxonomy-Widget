@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Multisite Taxonomy Widget\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-14 10:28+0100\n"
-"PO-Revision-Date: 2013-01-14 10:35+0100\n"
+"POT-Creation-Date: 2013-01-15 13:04+0100\n"
+"PO-Revision-Date: 2013-01-15 13:05+0100\n"
 "Last-Translator: Dennis Ploetner <re@lloc.de>\n"
 "Language-Team:  <re@lloc.de>\n"
 "Language: \n"
@@ -20,19 +20,23 @@ msgstr ""
 msgid "List the latest posts of a specific taxonomy from the whole blog-network"
 msgstr "Listet die aktuellsten Artikel einer speziellen Taxonomy aus dem gesamten Blognetzwerk."
 
-#: ../MultisiteTaxonomyWidget.php:69
-msgid "Title:"
-msgstr "Titel des Widgets:"
+#: ../MultisiteTaxonomyWidget.php:70
+msgid "Title"
+msgstr "Titel des Widgets"
 
-#: ../MultisiteTaxonomyWidget.php:76
-msgid "Taxonomy:"
-msgstr "Taxonomy:"
+#: ../MultisiteTaxonomyWidget.php:77
+msgid "Taxonomy"
+msgstr "Taxonomy"
 
-#: ../MultisiteTaxonomyWidget.php:92
-msgid "Name:"
-msgstr "Name (Slug):"
+#: ../MultisiteTaxonomyWidget.php:93
+msgid "Name"
+msgstr "Name (Slug)"
 
-#: ../MultisiteTaxonomyWidget.php:99
-msgid "Limit:"
-msgstr "Max. Anzahl:"
+#: ../MultisiteTaxonomyWidget.php:100
+msgid "Limit"
+msgstr "Max. Anzahl"
+
+#: ../MultisiteTaxonomyWidget.php:107
+msgid "Thumbnail"
+msgstr "Thumbnail"
 

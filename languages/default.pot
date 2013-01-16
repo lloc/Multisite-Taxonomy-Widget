@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Multisite Taxonomy Widget\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-14 10:28+0100\n"
-"PO-Revision-Date: 2013-01-14 10:28+0100\n"
+"POT-Creation-Date: 2013-01-15 13:04+0100\n"
+"PO-Revision-Date: 2013-01-15 13:04+0100\n"
 "Last-Translator: Dennis Ploetner <re@lloc.de>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -18,19 +18,23 @@ msgstr ""
 msgid "List the latest posts of a specific taxonomy from the whole blog-network"
 msgstr ""
 
-#: ../MultisiteTaxonomyWidget.php:69
-msgid "Title:"
+#: ../MultisiteTaxonomyWidget.php:70
+msgid "Title"
 msgstr ""
 
-#: ../MultisiteTaxonomyWidget.php:76
-msgid "Taxonomy:"
+#: ../MultisiteTaxonomyWidget.php:77
+msgid "Taxonomy"
 msgstr ""
 
-#: ../MultisiteTaxonomyWidget.php:92
-msgid "Name:"
+#: ../MultisiteTaxonomyWidget.php:93
+msgid "Name"
 msgstr ""
 
-#: ../MultisiteTaxonomyWidget.php:99
-msgid "Limit:"
+#: ../MultisiteTaxonomyWidget.php:100
+msgid "Limit"
+msgstr ""
+
+#: ../MultisiteTaxonomyWidget.php:107
+msgid "Thumbnail"
 msgstr ""
 
