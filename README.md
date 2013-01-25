@@ -34,4 +34,8 @@ When you dragged the widget in one of your sidebars you can fill in various para
 
 5.  **Thumbnail**
 
-	You can set any positive number here if you want to show thumbnails too. If you don’t like them let this field empty.
+	You can set any positive number here if you want to show thumbnails. If you don’t like them let this field empty or fill in a 0.
+
+How to use the shortcode
+------------------------
+
