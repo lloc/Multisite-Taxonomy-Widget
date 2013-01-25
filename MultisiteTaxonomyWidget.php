@@ -55,14 +55,14 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance              = $old_instance;
+		$instance = $old_instance;
 
-		$instance['title']     = strip_tags( $new_instance['title'] );
-		$instance['taxonomy']  = strip_tags( $new_instance['taxonomy'] );
-		$instance['name']      = strip_tags( $new_instance['name'] );
+		$instance['title']    = strip_tags( $new_instance['title'] );
+		$instance['taxonomy'] = strip_tags( $new_instance['taxonomy'] );
+		$instance['name']     = strip_tags( $new_instance['name'] );
 
-		$temp                  = (int) $new_instance['limit'];
-		$instance['limit']     = ( $temp > 0 || $temp == -1 ? $temp : 10 );
+		$temp              = (int) $new_instance['limit'];
+		$instance['limit'] = ( $temp > 0 || $temp == -1 ? $temp : 10 );
 
 		$temp                  = (int) $new_instance['thumbnail'];
 		$instance['thumbnail'] = ( $temp >= 0 ? $temp : 0 );
