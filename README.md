@@ -60,7 +60,7 @@ You can use filters if you want to override the output of the functions. The are
 
 1.  **mtw_formatelements_output_filter**
 
-	There is a function which calls this filter after adding 4 elements to an array of format-elements: before_mtw_list/after_mtw_list (<ul>/</ul>) and before_mtw_item/after_mtw_item (<li>/</li>) so you can override this.
+	There is a function which calls this filter after adding 4 elements to an array of format-elements: before_mtw_list/after_mtw_list (`<ul>/</ul>`) and before_mtw_item/after_mtw_item (`<li>/</li>`) so you can override this.
 
 2.  **mtw_thumbnail_output_filter**
 
