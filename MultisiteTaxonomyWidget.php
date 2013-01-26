@@ -8,8 +8,32 @@ Author: Dennis Ploetner
 Author URI: http://lloc.de/
 */
 
+/*
+Copyright 2013  Dennis Ploetner  (email : re@lloc.de)
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License, version 2, as 
+published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/**
+ * Widget
+ * @package Mtw
+ */
 class MultisiteTaxonomyWidget extends WP_Widget {
 
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		parent::__construct(
 			'mtw',
@@ -18,7 +42,12 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		);
 	}
 
-	public function widget( $args, $instance ) {
+	/**
+	 * Widget
+	 * @param array $args
+	 * @param array $instance
+	 */
+	public function widget( array $args, array $instance ) {
 		$args = mtw_get_formatelements( $args );
 		echo $args['before_widget'];
 		$title = apply_filters( 'widget_title', $instance['title'] );
@@ -54,7 +83,13 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		echo $args['after_widget'];
 	}
 
-	public function update( $new_instance, $old_instance ) {
+	/**
+	 * Update
+	 * @param array $new_instance
+	 * @param array $old_instance
+	 * @return array
+	 */
+	public function update( array $new_instance, array $old_instance ) {
 		$instance = $old_instance;
 
 		$instance['title']    = strip_tags( $new_instance['title'] );
@@ -69,7 +104,11 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		return $instance;
 	}
 
-	public function form( $instance ) {
+	/**
+	 * Form
+	 * @param $instance
+	 */
+	public function form( array $instance ) {
 		printf(
 			'<p><label for="%1$s">%2$s:</label> <input class="widefat" id="%1$s" name="%3$s" type="text" value="%4$s" /></p>',
 			$this->get_field_id( 'title' ),
@@ -119,7 +158,14 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 }
 add_action( 'widgets_init', create_function( '', 'register_widget( "MultisiteTaxonomyWidget" );' ) );
 
-function mtw_get_posts( $instance, array $posts ) {
+/**
+ * Get posts
+ * @package Mtw
+ * @param array $instance
+ * @param array $posts
+ * @return array
+ */
+function mtw_get_posts( array $instance, array $posts ) {
 	$args  = array(
 		'post_type' => 'any',
 		'tax_query' => array(
@@ -149,13 +195,26 @@ function mtw_get_posts( $instance, array $posts ) {
 	return( array_slice( $posts, 0, $instance['limit'] ) );
 }
 
-function mtw_cmp_posts( $a, $b ) {
+/**
+ * Compare posts
+ * @package Mtw
+ * @param StdClass $a
+ * @param StdClass $b
+ * @return int
+ */
+function mtw_cmp_posts( StdClass $a, StdClass $b ) {
 	if ( $a->mtw_ts == $b->mtw_ts )
 		return 0;
 	return( $a->mtw_ts > $b->mtw_ts ? (-1) : 1 );
 }
 
-function mtw_get_posts_from_blogs( $instance ) {
+/**
+ * Get posts from blogs
+ * @package Mtw
+ * @param array $instance
+ * @return array
+ */
+function mtw_get_posts_from_blogs( array $instance ) {
 	global $wpdb;
 	$posts = mtw_get_posts( $instance, array() );
 	$blogs = $wpdb->get_col(
@@ -171,6 +230,10 @@ function mtw_get_posts_from_blogs( $instance ) {
 	return $posts;
 }
 
+/**
+ * Plugin init
+ * @package Mtw
+ */
 function mtw_plugin_init() {
 	load_plugin_textdomain(
 		'mtw',
@@ -180,7 +243,13 @@ function mtw_plugin_init() {
 }
 add_action( 'init', 'mtw_plugin_init' );
 
-function mtw_create_shortcode( $atts ) {
+/**
+ * Create shortcode
+ * @package Mtw
+ * @param array $atts
+ * @return string
+ */
+function mtw_create_shortcode( array $atts ) {
 	$posts   = mtw_get_posts_from_blogs( $atts );
 	$content = '';
 	if ( $posts ) {
@@ -210,7 +279,14 @@ function mtw_create_shortcode( $atts ) {
 }
 add_shortcode( 'mtw_posts', 'mtw_create_shortcode' );
 
-function mtw_get_thumbnail( $post, array $atts ) {
+/**
+ * Get thumbnail
+ * @package Mtw
+ * @param StdClass $post
+ * @param array $atts
+ * @return string
+ */
+function mtw_get_thumbnail( StdClass $post, array $atts ) {
 	if ( !empty( $atts['thumbnail'] ) ) {
 		if ( has_filter( 'mtw_thumbnail_output_filter' ) ) {
 			return apply_filters(
@@ -230,8 +306,9 @@ function mtw_get_thumbnail( $post, array $atts ) {
 
 /**
  * Get formatelements
+ * @package Mtw
  * @param array $args
- * return array
+ * @return array
  */ 
 function mtw_get_formatelements( array $args ) {
 	$args['before_mtw_list'] = '<ul>';
