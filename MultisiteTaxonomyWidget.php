@@ -44,6 +44,19 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 
 	/**
 	 * Widget
+	 * 
+	 * You can use code like this if you want to override the output of
+	 * the method:
+	 * <code>
+	 * function my_widget_output( StdClass $post, array $atts ) {
+	 *     return sprintf(
+	 *         '<a href="%1$s" title="%2$s">%2$s</a>',
+	 *         $post->mtw_href,
+	 *         apply_filters( 'the_title', $post->post_title )
+	 *     );
+	 * }
+	 * add_filter( 'mtw_widget_output_filter', 'my_widget_output' );
+	 * </code>
 	 * @param array $args
 	 * @param array $instance
 	 */
@@ -245,6 +258,19 @@ add_action( 'init', 'mtw_plugin_init' );
 
 /**
  * Create shortcode
+ * 
+ * You can use code like this if you want to override the output of the
+ * function:
+ * <code>
+ * function my_create_shortcode( StdClass $post, array $atts ) {
+ *     return sprintf(
+ *         '<a href="%1$s" title="%2$s">%2$s</a>',
+ *         $post->mtw_href,
+ *         apply_filters( 'the_title', $post->post_title )
+ *     );
+ * }
+ * add_filter( 'mtw_shortcode_output_filter', 'my_create_shortcode' );
+ * </code>
  * @package Mtw
  * @param array $atts
  * @return string
@@ -281,6 +307,23 @@ add_shortcode( 'mtw_posts', 'mtw_create_shortcode' );
 
 /**
  * Get thumbnail
+ * 
+ * You can use code like this if you want to override the output of the
+ * function:
+ * <code>
+ * function my_get_thumbnail( StdClass $post, array $atts ) {
+ *     if ( !empty( $atts['thumbnail'] ) ) {
+ *         return sprintf(
+ *             '<a href="%s" title="%s">%s</a>',
+ *             $post->mtw_href,
+ *             apply_filters( 'the_title', $post->post_title ),
+ *             $post->mtw_thumb
+ *         );
+ *     }
+ *     return '';
+ * }
+ * add_filter( 'mtw_thumbnail_output_filter', 'my_get_thumbnail' );
+ * </code>
  * @package Mtw
  * @param StdClass $post
  * @param array $atts
@@ -306,6 +349,19 @@ function mtw_get_thumbnail( StdClass $post, array $atts ) {
 
 /**
  * Get formatelements
+ * 
+ * You can use code like this if you want to override the output of the
+ * function:
+ * <code>
+ * function my_get_formatelements( $args ) {
+ *     $args['before_mtw_list'] = '<div>';
+ *     $args['after_mtw_list']  = '</div>';
+ *     $args['before_mtw_item'] = '<p>';
+ *     $args['after_mtw_item']  = '</p>';
+ *     return $args;
+ * }
+ * add_filter( 'mtw_formatelements_output_filter', 'my_get_formatelements' );
+ * </code>
  * @package Mtw
  * @param array $args
  * @return array
