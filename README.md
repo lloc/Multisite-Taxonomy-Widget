@@ -68,7 +68,7 @@ You can use filters if you want to override the output of the functions. The are
 
 	You can create your customized output of the thumbnail. This filter gives you access to a post-object and an array of parameters and returns the string from your function if you define one.
 
-	[See also](http://lloc.github.com/Multisite-Taxonomy-Widget/function-mtw_get_formatelements.html)
+	[See also](http://lloc.github.com/Multisite-Taxonomy-Widget/function-mtw_get_thumbnail.html)
 
 3.  **mtw_shortcode_output_filter**
 
