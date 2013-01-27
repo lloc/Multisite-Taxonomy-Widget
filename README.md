@@ -61,19 +61,23 @@ You can use filters if you want to override the output of the functions. The are
 1.  **mtw_formatelements_output_filter**
 
 	There is a function which calls this filter after adding 4 elements to an array of format-elements: before_mtw_list/after_mtw_list (`<ul>/</ul>`) and before_mtw_item/after_mtw_item (`<li>/</li>`) so you can override this.
+
 	[See also](http://lloc.github.com/Multisite-Taxonomy-Widget/function-mtw_get_formatelements.html)
 
 2.  **mtw_thumbnail_output_filter**
 
 	You can create your customized output of the thumbnail. This filter gives you access to a post-object and an array of parameters and returns the string from your function if you define one.
+
 	[See also](http://lloc.github.com/Multisite-Taxonomy-Widget/function-mtw_get_formatelements.html)
 
 3.  **mtw_shortcode_output_filter**
 
 	You can create your customized output of the list-item when a shortcode is used. This filter gives you access to a post-object and an array of parameters and returns the string from your function if you define one.
+
 	[See also](loc.github.com/Multisite-Taxonomy-Widget/function-mtw_create_shortcode.html)
 
 4.  **mtw_widget_output_filter**
 
 	You can create your customized output of the list-item when a widget is used. This filter gives you access to a post-object and an array of parameters and returns the string from your function if you define one.
-	[Read more](http://lloc.github.com/Multisite-Taxonomy-Widget/class-MultisiteTaxonomyWidget.html)
+
+	[See also](http://lloc.github.com/Multisite-Taxonomy-Widget/class-MultisiteTaxonomyWidget.html)
