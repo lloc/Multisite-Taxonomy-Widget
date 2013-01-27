@@ -92,12 +92,37 @@
 	
 <p>Create shortcode</p>
 
+<p>You can use code like this if you want to override the behaviour of the
+function:</p>
+
+<pre>
+<span
+class="php-keyword1">function</span> my_create_shortcode( StdClass <span
+class="php-var">$post</span>, <span class="php-keyword1">array</span> <span
+class="php-var">$atts</span> ) {
+    <span
+class="php-keyword1">return</span> <span
+class="php-keyword2">sprintf</span>(
+        <span
+class="php-quote">'&lt;a href=&quot;%1$s&quot; title=&quot;%2$s&quot;&gt;%2$s&lt;/a&gt;'</span>,
+        <span
+class="php-var">$post</span>-&gt;mtw_href,
+        apply_filters( <span
+class="php-quote">'the_title'</span>, <span
+class="php-var">$post</span>-&gt;post_title )
+    );
+}
+add_filter( <span
+class="php-quote">'mtw_shortcode_output_filter'</span>, <span
+class="php-quote">'my_create_shortcode'</span> );
+</pre>
+
 	</div>
 
 	<div class="info">
 		
 		<b>Package:</b> <a href="package-Mtw.html">Mtw</a><br />
-		<b>Located at</b> <a href="source-function-mtw_create_shortcode.html#246-279" title="Go to source code">MultisiteTaxonomyWidget.php</a><br />
+		<b>Located at</b> <a href="source-function-mtw_create_shortcode.html#246-292" title="Go to source code">MultisiteTaxonomyWidget.php</a><br />
 	</div>
 
 
