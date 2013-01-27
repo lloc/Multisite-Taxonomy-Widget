@@ -92,12 +92,42 @@
 	
 <p>Get formatelements</p>
 
+<p>You can use code like this if you want to override the behaviour of the
+function:</p>
+
+<pre>
+<span class="php-keyword1">function</span> my_get_formatelements( <span
+class="php-var">$args</span> ) {
+    <span class="php-var">$args</span>[<span
+class="php-quote">'before_mtw_list'</span>] = <span
+class="php-quote">'&lt;div&gt;'</span>;
+    <span
+class="php-var">$args</span>[<span
+class="php-quote">'after_mtw_list'</span>]  = <span
+class="php-quote">'&lt;/div&gt;'</span>;
+    <span
+class="php-var">$args</span>[<span
+class="php-quote">'before_mtw_item'</span>] = <span
+class="php-quote">'&lt;p&gt;'</span>;
+    <span
+class="php-var">$args</span>[<span
+class="php-quote">'after_mtw_item'</span>]  = <span
+class="php-quote">'&lt;/p&gt;'</span>;
+    <span
+class="php-keyword1">return</span> <span
+class="php-var">$args</span>;
+}
+add_filter( <span
+class="php-quote">'mtw_formatelements_output_filter'</span>, <span
+class="php-quote">'my_get_formatelements'</span> );
+</pre>
+
 	</div>
 
 	<div class="info">
 		
 		<b>Package:</b> <a href="package-Mtw.html">Mtw</a><br />
-		<b>Located at</b> <a href="source-function-mtw_get_formatelements.html#307-319" title="Go to source code">MultisiteTaxonomyWidget.php</a><br />
+		<b>Located at</b> <a href="source-function-mtw_get_formatelements.html#324-349" title="Go to source code">MultisiteTaxonomyWidget.php</a><br />
 	</div>
 
 
