@@ -121,7 +121,7 @@ WP_Widget
 		
 		<b>Package:</b> <a href="package-Mtw.html">Mtw</a><br />
 
-		<b>Located at</b> <a href="source-class-MultisiteTaxonomyWidget.html#28-158" title="Go to source code">MultisiteTaxonomyWidget.php</a><br />
+		<b>Located at</b> <a href="source-class-MultisiteTaxonomyWidget.html#28-171" title="Go to source code">MultisiteTaxonomyWidget.php</a><br />
 	</div>
 
 
@@ -172,7 +172,7 @@ WP_Widget
 
 		<td class="name"><div>
 		<a class="anchor" href="#_widget">#</a>
-		<code><a href="source-class-MultisiteTaxonomyWidget.html#45-84" title="Go to source code">widget</a>( <span>array <var>$args</var></span>, <span>array <var>$instance</var></span> )</code>
+		<code><a href="source-class-MultisiteTaxonomyWidget.html#45-97" title="Go to source code">widget</a>( <span>array <var>$args</var></span>, <span>array <var>$instance</var></span> )</code>
 
 		<div class="description short">
 			
@@ -183,6 +183,31 @@ WP_Widget
 		<div class="description detailed hidden">
 			
 <p>Widget</p>
+
+<p>You can use code like this if you want to override the output of the
+method:</p>
+
+<pre>
+<span
+class="php-keyword1">function</span> my_widget_output( StdClass <span
+class="php-var">$post</span>, <span class="php-keyword1">array</span> <span
+class="php-var">$atts</span> ) {
+    <span
+class="php-keyword1">return</span> <span
+class="php-keyword2">sprintf</span>(
+        <span
+class="php-quote">'&lt;a href=&quot;%1$s&quot; title=&quot;%2$s&quot;&gt;%2$s&lt;/a&gt;'</span>,
+        <span
+class="php-var">$post</span>-&gt;mtw_href,
+        apply_filters( <span
+class="php-quote">'the_title'</span>, <span
+class="php-var">$post</span>-&gt;post_title )
+    );
+}
+add_filter( <span
+class="php-quote">'mtw_widget_output_filter'</span>, <span
+class="php-quote">'my_widget_output'</span> );
+</pre>
 
 
 
@@ -212,7 +237,7 @@ WP_Widget
 
 		<td class="name"><div>
 		<a class="anchor" href="#_update">#</a>
-		<code><a href="source-class-MultisiteTaxonomyWidget.html#86-105" title="Go to source code">update</a>( <span>array <var>$new_instance</var></span>, <span>array <var>$old_instance</var></span> )</code>
+		<code><a href="source-class-MultisiteTaxonomyWidget.html#99-118" title="Go to source code">update</a>( <span>array <var>$new_instance</var></span>, <span>array <var>$old_instance</var></span> )</code>
 
 		<div class="description short">
 			
@@ -256,7 +281,7 @@ WP_Widget
 
 		<td class="name"><div>
 		<a class="anchor" href="#_form">#</a>
-		<code><a href="source-class-MultisiteTaxonomyWidget.html#107-156" title="Go to source code">form</a>( <span>array <var>$instance</var></span> )</code>
+		<code><a href="source-class-MultisiteTaxonomyWidget.html#120-169" title="Go to source code">form</a>( <span>array <var>$instance</var></span> )</code>
 
 		<div class="description short">
 			
