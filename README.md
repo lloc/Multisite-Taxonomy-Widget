@@ -74,7 +74,7 @@ You can use filters if you want to override the output of the functions. The are
 
 	You can create your customized output of the list-item when a shortcode is used. This filter gives you access to a post-object and an array of parameters and returns the string from your function if you define one.
 
-	[See also](loc.github.com/Multisite-Taxonomy-Widget/function-mtw_create_shortcode.html)
+	[See also](http://lloc.github.com/Multisite-Taxonomy-Widget/function-mtw_create_shortcode.html)
 
 4.  **mtw_widget_output_filter**
 
