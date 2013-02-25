@@ -3,7 +3,7 @@
 Plugin Name: Multisite Taxonomy Widget
 Plugin URI: https://github.com/lloc/Multisite-Taxonomy-Widget
 Description: List the latest posts of a specific taxonomy from your blog-network.
-Version: 0.6
+Version: 0.7
 Author: Dennis Ploetner 
 Author URI: http://lloc.de/
 */
@@ -48,7 +48,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	 * You can use code like this if you want to override the output of
 	 * the method:
 	 * <code>
-	 * function my_widget_output( StdClass $post, array $atts ) {
+	 * function my_widget_output( $post, array $atts ) {
 	 *     return sprintf(
 	 *         '<a href="%1$s" title="%2$s">%2$s</a>',
 	 *         $post->mtw_href,
@@ -200,7 +200,7 @@ function mtw_get_posts( array $instance, array $posts ) {
 		$query->post->mtw_ts    = get_the_time( 'U', $query->post->ID );
 		$query->post->mtw_href  = get_permalink( $query->post->ID );
 		$query->post->mtw_thumb = get_the_post_thumbnail( $query->post->ID, $ts_size );
-		$posts[] = $query->post;
+		$posts[] = mtw_post_faxctory( $query->post );
 	}
 	usort( $posts, 'mtw_cmp_posts' );
 	wp_reset_query();
@@ -211,11 +211,11 @@ function mtw_get_posts( array $instance, array $posts ) {
 /**
  * Compare posts
  * @package Mtw
- * @param StdClass $a
- * @param StdClass $b
+ * @param WP_Post $a
+ * @param WP_Post $b
  * @return int
  */
-function mtw_cmp_posts( StdClass $a, StdClass $b ) {
+function mtw_cmp_posts( WP_Post $a, WP_Post $b ) {
 	if ( $a->mtw_ts == $b->mtw_ts )
 		return 0;
 	return( $a->mtw_ts > $b->mtw_ts ? (-1) : 1 );
@@ -262,7 +262,7 @@ add_action( 'init', 'mtw_plugin_init' );
  * You can use code like this if you want to override the output of the
  * function:
  * <code>
- * function my_create_shortcode( StdClass $post, array $atts ) {
+ * function my_create_shortcode( WP_Post $post, array $atts ) {
  *     return sprintf(
  *         '<a href="%1$s" title="%2$s">%2$s</a>',
  *         $post->mtw_href,
@@ -311,7 +311,7 @@ add_shortcode( 'mtw_posts', 'mtw_create_shortcode' );
  * You can use code like this if you want to override the output of the
  * function:
  * <code>
- * function my_get_thumbnail( StdClass $post, array $atts ) {
+ * function my_get_thumbnail( WP_Post $post, array $atts ) {
  *     if ( !empty( $atts['thumbnail'] ) ) {
  *         return sprintf(
  *             '<a href="%s" title="%s">%s</a>',
@@ -325,11 +325,11 @@ add_shortcode( 'mtw_posts', 'mtw_create_shortcode' );
  * add_filter( 'mtw_thumbnail_output_filter', 'my_get_thumbnail' );
  * </code>
  * @package Mtw
- * @param StdClass $post
+ * @param WP_Post $post
  * @param array $atts
  * @return string
  */
-function mtw_get_thumbnail( StdClass $post, array $atts ) {
+function mtw_get_thumbnail( WP_Post $post, array $atts ) {
 	if ( !empty( $atts['thumbnail'] ) ) {
 		if ( has_filter( 'mtw_thumbnail_output_filter' ) ) {
 			return apply_filters(
@@ -372,4 +372,35 @@ function mtw_get_formatelements( array $args ) {
 	$args['before_mtw_item'] = '<li>';
 	$args['after_mtw_item']  = '</li>';
 	return apply_filters( 'mtw_formatelements_output_filter', $args );
+}
+
+/**
+ * Post factory
+ * 
+ * Factory as workaround for the new introduced class WP_Post
+ * @package Mtw
+ * @param mixed $obj
+ * @return mixed
+ * @since 0.7
+ */
+function mtw_post_faxctory( $obj ) {
+	if ( is_object( $obj ) && $obj instanceof StdClass ) {
+		$new = new WP_Post;
+		foreach ( $obj as $key => $value ) {
+			$new->$key = $value;
+		}
+		return $new;
+	}
+	return $obj;
+}
+
+if ( !class_exists( 'WP_Post' ) ) {
+	/**
+	 * WP_Post
+	 * 
+	 * There will be no core class WP_Post if the WordPress version is 
+	 * not 3.6 and higher.
+	 * @package Mtw
+	 */
+	class WP_Post extends StdClass { }
 }

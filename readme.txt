@@ -4,7 +4,7 @@ Donate link: http://www.greenpeace.org/international/en/supportus/
 Tags: multisite, recent posts, taxonomy, category, tag, widget
 Requires at least: 3.2.1
 Tested up to: 3.6
-Stable tag: 0.6
+Stable tag: 0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,6 +25,9 @@ There is an [introduction](https://github.com/lloc/Multisite-Taxonomy-Widget#mul
 
 == Changelog ==
 
+= 0.7 =
+* Fix: WordPress 3.6 will use posts as objects of WP_Post (and not StdClass anymore)
+ 
 = 0.6 =
 * Some small enhancements
 * it_IT is now included
