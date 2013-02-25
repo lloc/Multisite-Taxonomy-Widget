@@ -8,7 +8,7 @@
 	<title>File MultisiteTaxonomyWidget.php | Multisite Taxonomy Widget</title>
 
 	<script type="text/javascript" src="resources/combined.js?394153670"></script>
-	<script type="text/javascript" src="elementlist.js?3196923335"></script>
+	<script type="text/javascript" src="elementlist.js?575805382"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
 
 </head>
@@ -24,6 +24,8 @@
 			<ul>
 				<li class="active"><a href="package-Mtw.html">Mtw</a>
 						</li>
+				<li><a href="package-None.html">None</a>
+						</li>
 			</ul>
 		</div>
 
@@ -34,6 +36,7 @@
 			<h3>Classes</h3>
 			<ul>
 				<li><a href="class-MultisiteTaxonomyWidget.html">MultisiteTaxonomyWidget</a></li>
+				<li><a href="class-WP_Post.html">WP_Post</a></li>
 			</ul>
 
 
@@ -91,7 +94,7 @@
 </span></span><span id="3" class="l"><a class="l" href="#3">  3: </a><span class="php-comment">Plugin Name: Multisite Taxonomy Widget
 </span></span><span id="4" class="l"><a class="l" href="#4">  4: </a><span class="php-comment">Plugin URI: https://github.com/lloc/Multisite-Taxonomy-Widget
 </span></span><span id="5" class="l"><a class="l" href="#5">  5: </a><span class="php-comment">Description: List the latest posts of a specific taxonomy from your blog-network.
-</span></span><span id="6" class="l"><a class="l" href="#6">  6: </a><span class="php-comment">Version: 0.6
+</span></span><span id="6" class="l"><a class="l" href="#6">  6: </a><span class="php-comment">Version: 0.7
 </span></span><span id="7" class="l"><a class="l" href="#7">  7: </a><span class="php-comment">Author: Dennis Ploetner 
 </span></span><span id="8" class="l"><a class="l" href="#8">  8: </a><span class="php-comment">Author URI: http://lloc.de/
 </span></span><span id="9" class="l"><a class="l" href="#9">  9: </a><span class="php-comment">*/</span>
@@ -136,7 +139,7 @@
 </span></span><span id="48" class="l"><a class="l" href="#48"> 48: </a><span class="php-comment">     * You can use code like this if you want to override the output of
 </span></span><span id="49" class="l"><a class="l" href="#49"> 49: </a><span class="php-comment">     * the method:
 </span></span><span id="50" class="l"><a class="l" href="#50"> 50: </a><span class="php-comment">     * &lt;code&gt;
-</span></span><span id="51" class="l"><a class="l" href="#51"> 51: </a><span class="php-comment">     * function my_widget_output( StdClass $post, array $atts ) {
+</span></span><span id="51" class="l"><a class="l" href="#51"> 51: </a><span class="php-comment">     * function my_widget_output( $post, array $atts ) {
 </span></span><span id="52" class="l"><a class="l" href="#52"> 52: </a><span class="php-comment">     *     return sprintf(
 </span></span><span id="53" class="l"><a class="l" href="#53"> 53: </a><span class="php-comment">     *         '&lt;a href=&quot;%1$s&quot; title=&quot;%2$s&quot;&gt;%2$s&lt;/a&gt;',
 </span></span><span id="54" class="l"><a class="l" href="#54"> 54: </a><span class="php-comment">     *         $post-&gt;mtw_href,
@@ -288,7 +291,7 @@
 </span><span id="200" class="l"><a class="l" href="#200">200: </a>        <span class="php-var">$query</span>-&gt;post-&gt;mtw_ts    = get_the_time( <span class="php-quote">'U'</span>, <span class="php-var">$query</span>-&gt;post-&gt;ID );
 </span><span id="201" class="l"><a class="l" href="#201">201: </a>        <span class="php-var">$query</span>-&gt;post-&gt;mtw_href  = get_permalink( <span class="php-var">$query</span>-&gt;post-&gt;ID );
 </span><span id="202" class="l"><a class="l" href="#202">202: </a>        <span class="php-var">$query</span>-&gt;post-&gt;mtw_thumb = get_the_post_thumbnail( <span class="php-var">$query</span>-&gt;post-&gt;ID, <span class="php-var">$ts_size</span> );
-</span><span id="203" class="l"><a class="l" href="#203">203: </a>        <span class="php-var">$posts</span>[] = <span class="php-var">$query</span>-&gt;post;
+</span><span id="203" class="l"><a class="l" href="#203">203: </a>        <span class="php-var">$posts</span>[] = mtw_post_faxctory( <span class="php-var">$query</span>-&gt;post );
 </span><span id="204" class="l"><a class="l" href="#204">204: </a>    }
 </span><span id="205" class="l"><a class="l" href="#205">205: </a>    <span class="php-keyword2">usort</span>( <span class="php-var">$posts</span>, <span class="php-quote">'mtw_cmp_posts'</span> );
 </span><span id="206" class="l"><a class="l" href="#206">206: </a>    wp_reset_query();
@@ -299,11 +302,11 @@
 </span><span id="211" class="l"><a class="l" href="#211">211: </a><span class="php-comment">/**
 </span></span><span id="212" class="l"><a class="l" href="#212">212: </a><span class="php-comment"> * Compare posts
 </span></span><span id="213" class="l"><a class="l" href="#213">213: </a><span class="php-comment"> * @package Mtw
-</span></span><span id="214" class="l"><a class="l" href="#214">214: </a><span class="php-comment"> * @param StdClass $a
-</span></span><span id="215" class="l"><a class="l" href="#215">215: </a><span class="php-comment"> * @param StdClass $b
+</span></span><span id="214" class="l"><a class="l" href="#214">214: </a><span class="php-comment"> * @param WP_Post $a
+</span></span><span id="215" class="l"><a class="l" href="#215">215: </a><span class="php-comment"> * @param WP_Post $b
 </span></span><span id="216" class="l"><a class="l" href="#216">216: </a><span class="php-comment"> * @return int
 </span></span><span id="217" class="l"><a class="l" href="#217">217: </a><span class="php-comment"> */</span>
-</span><span id="218" class="l"><a class="l" href="#218">218: </a><span class="php-keyword1">function</span> <a id="_mtw_cmp_posts" href="#_mtw_cmp_posts">mtw_cmp_posts</a>( StdClass <span class="php-var">$a</span>, StdClass <span class="php-var">$b</span> ) {
+</span><span id="218" class="l"><a class="l" href="#218">218: </a><span class="php-keyword1">function</span> <a id="_mtw_cmp_posts" href="#_mtw_cmp_posts">mtw_cmp_posts</a>( WP_Post <span class="php-var">$a</span>, WP_Post <span class="php-var">$b</span> ) {
 </span><span id="219" class="l"><a class="l" href="#219">219: </a>    <span class="php-keyword1">if</span> ( <span class="php-var">$a</span>-&gt;mtw_ts == <span class="php-var">$b</span>-&gt;mtw_ts )
 </span><span id="220" class="l"><a class="l" href="#220">220: </a>        <span class="php-keyword1">return</span> <span class="php-num">0</span>;
 </span><span id="221" class="l"><a class="l" href="#221">221: </a>    <span class="php-keyword1">return</span>( <span class="php-var">$a</span>-&gt;mtw_ts &gt; <span class="php-var">$b</span>-&gt;mtw_ts ? (-<span class="php-num">1</span>) : <span class="php-num">1</span> );
@@ -350,7 +353,7 @@
 </span></span><span id="262" class="l"><a class="l" href="#262">262: </a><span class="php-comment"> * You can use code like this if you want to override the output of the
 </span></span><span id="263" class="l"><a class="l" href="#263">263: </a><span class="php-comment"> * function:
 </span></span><span id="264" class="l"><a class="l" href="#264">264: </a><span class="php-comment"> * &lt;code&gt;
-</span></span><span id="265" class="l"><a class="l" href="#265">265: </a><span class="php-comment"> * function my_create_shortcode( StdClass $post, array $atts ) {
+</span></span><span id="265" class="l"><a class="l" href="#265">265: </a><span class="php-comment"> * function my_create_shortcode( WP_Post $post, array $atts ) {
 </span></span><span id="266" class="l"><a class="l" href="#266">266: </a><span class="php-comment"> *     return sprintf(
 </span></span><span id="267" class="l"><a class="l" href="#267">267: </a><span class="php-comment"> *         '&lt;a href=&quot;%1$s&quot; title=&quot;%2$s&quot;&gt;%2$s&lt;/a&gt;',
 </span></span><span id="268" class="l"><a class="l" href="#268">268: </a><span class="php-comment"> *         $post-&gt;mtw_href,
@@ -399,7 +402,7 @@
 </span></span><span id="311" class="l"><a class="l" href="#311">311: </a><span class="php-comment"> * You can use code like this if you want to override the output of the
 </span></span><span id="312" class="l"><a class="l" href="#312">312: </a><span class="php-comment"> * function:
 </span></span><span id="313" class="l"><a class="l" href="#313">313: </a><span class="php-comment"> * &lt;code&gt;
-</span></span><span id="314" class="l"><a class="l" href="#314">314: </a><span class="php-comment"> * function my_get_thumbnail( StdClass $post, array $atts ) {
+</span></span><span id="314" class="l"><a class="l" href="#314">314: </a><span class="php-comment"> * function my_get_thumbnail( WP_Post $post, array $atts ) {
 </span></span><span id="315" class="l"><a class="l" href="#315">315: </a><span class="php-comment"> *     if ( !empty( $atts['thumbnail'] ) ) {
 </span></span><span id="316" class="l"><a class="l" href="#316">316: </a><span class="php-comment"> *         return sprintf(
 </span></span><span id="317" class="l"><a class="l" href="#317">317: </a><span class="php-comment"> *             '&lt;a href=&quot;%s&quot; title=&quot;%s&quot;&gt;%s&lt;/a&gt;',
@@ -413,11 +416,11 @@
 </span></span><span id="325" class="l"><a class="l" href="#325">325: </a><span class="php-comment"> * add_filter( 'mtw_thumbnail_output_filter', 'my_get_thumbnail' );
 </span></span><span id="326" class="l"><a class="l" href="#326">326: </a><span class="php-comment"> * &lt;/code&gt;
 </span></span><span id="327" class="l"><a class="l" href="#327">327: </a><span class="php-comment"> * @package Mtw
-</span></span><span id="328" class="l"><a class="l" href="#328">328: </a><span class="php-comment"> * @param StdClass $post
+</span></span><span id="328" class="l"><a class="l" href="#328">328: </a><span class="php-comment"> * @param WP_Post $post
 </span></span><span id="329" class="l"><a class="l" href="#329">329: </a><span class="php-comment"> * @param array $atts
 </span></span><span id="330" class="l"><a class="l" href="#330">330: </a><span class="php-comment"> * @return string
 </span></span><span id="331" class="l"><a class="l" href="#331">331: </a><span class="php-comment"> */</span>
-</span><span id="332" class="l"><a class="l" href="#332">332: </a><span class="php-keyword1">function</span> <a id="_mtw_get_thumbnail" href="#_mtw_get_thumbnail">mtw_get_thumbnail</a>( StdClass <span class="php-var">$post</span>, <span class="php-keyword1">array</span> <span class="php-var">$atts</span> ) {
+</span><span id="332" class="l"><a class="l" href="#332">332: </a><span class="php-keyword1">function</span> <a id="_mtw_get_thumbnail" href="#_mtw_get_thumbnail">mtw_get_thumbnail</a>( WP_Post <span class="php-var">$post</span>, <span class="php-keyword1">array</span> <span class="php-var">$atts</span> ) {
 </span><span id="333" class="l"><a class="l" href="#333">333: </a>    <span class="php-keyword1">if</span> ( !<span class="php-keyword1">empty</span>( <span class="php-var">$atts</span>[<span class="php-quote">'thumbnail'</span>] ) ) {
 </span><span id="334" class="l"><a class="l" href="#334">334: </a>        <span class="php-keyword1">if</span> ( has_filter( <span class="php-quote">'mtw_thumbnail_output_filter'</span> ) ) {
 </span><span id="335" class="l"><a class="l" href="#335">335: </a>            <span class="php-keyword1">return</span> apply_filters(
@@ -461,7 +464,35 @@
 </span><span id="373" class="l"><a class="l" href="#373">373: </a>    <span class="php-var">$args</span>[<span class="php-quote">'after_mtw_item'</span>]  = <span class="php-quote">'&lt;/li&gt;'</span>;
 </span><span id="374" class="l"><a class="l" href="#374">374: </a>    <span class="php-keyword1">return</span> apply_filters( <span class="php-quote">'mtw_formatelements_output_filter'</span>, <span class="php-var">$args</span> );
 </span><span id="375" class="l"><a class="l" href="#375">375: </a>}
-</span><span id="376" class="l"><a class="l" href="#376">376: </a></span></code></pre>
+</span><span id="376" class="l"><a class="l" href="#376">376: </a>
+</span><span id="377" class="l"><a class="l" href="#377">377: </a><span class="php-comment">/**
+</span></span><span id="378" class="l"><a class="l" href="#378">378: </a><span class="php-comment"> * Factory as workaround for the new introduced class WP_Post
+</span></span><span id="379" class="l"><a class="l" href="#379">379: </a><span class="php-comment"> * @param mixed $obj
+</span></span><span id="380" class="l"><a class="l" href="#380">380: </a><span class="php-comment"> * @return mixed
+</span></span><span id="381" class="l"><a class="l" href="#381">381: </a><span class="php-comment"> * @since 0.7
+</span></span><span id="382" class="l"><a class="l" href="#382">382: </a><span class="php-comment"> */</span>
+</span><span id="383" class="l"><a class="l" href="#383">383: </a><span class="php-keyword1">function</span> <a id="_mtw_post_faxctory" href="#_mtw_post_faxctory">mtw_post_faxctory</a>( <span class="php-var">$obj</span> ) {
+</span><span id="384" class="l"><a class="l" href="#384">384: </a>    <span class="php-keyword1">if</span> ( <span class="php-keyword2">is_object</span>( <span class="php-var">$obj</span> ) &amp;&amp; <span class="php-var">$obj</span> <span class="php-keyword1">instanceof</span> StdClass ) {
+</span><span id="385" class="l"><a class="l" href="#385">385: </a>        <span class="php-var">$new</span> = <span class="php-keyword1">new</span> WP_Post;
+</span><span id="386" class="l"><a class="l" href="#386">386: </a>        <span class="php-keyword1">foreach</span> ( <span class="php-var">$obj</span> <span class="php-keyword1">as</span> <span class="php-var">$key</span> =&gt; <span class="php-var">$value</span> ) {
+</span><span id="387" class="l"><a class="l" href="#387">387: </a>            <span class="php-var">$new</span>-&gt;<span class="php-var">$key</span> = <span class="php-var">$value</span>;
+</span><span id="388" class="l"><a class="l" href="#388">388: </a>        }
+</span><span id="389" class="l"><a class="l" href="#389">389: </a>        <span class="php-keyword1">return</span> <span class="php-var">$new</span>;
+</span><span id="390" class="l"><a class="l" href="#390">390: </a>    }
+</span><span id="391" class="l"><a class="l" href="#391">391: </a>    <span class="php-keyword1">return</span> <span class="php-var">$obj</span>;
+</span><span id="392" class="l"><a class="l" href="#392">392: </a>}
+</span><span id="393" class="l"><a class="l" href="#393">393: </a>
+</span><span id="394" class="l"><a class="l" href="#394">394: </a><span class="php-keyword1">if</span> ( !<span class="php-keyword2">class_exists</span>( <span class="php-quote">'WP_Post'</span> ) ) {
+</span><span id="395" class="l"><a class="l" href="#395">395: </a>    <span class="php-comment">/**
+</span></span><span id="396" class="l"><a class="l" href="#396">396: </a><span class="php-comment">     * WP_Post
+</span></span><span id="397" class="l"><a class="l" href="#397">397: </a><span class="php-comment">     * 
+</span></span><span id="398" class="l"><a class="l" href="#398">398: </a><span class="php-comment">     * There will be no class WP_Post if the WordPress version is not 
+</span></span><span id="399" class="l"><a class="l" href="#399">399: </a><span class="php-comment">     * 3.6 and higher
+</span></span><span id="400" class="l"><a class="l" href="#400">400: </a><span class="php-comment">     * @package Mtw
+</span></span><span id="401" class="l"><a class="l" href="#401">401: </a><span class="php-comment">     */</span>
+</span><span id="402" class="l"><a class="l" href="#402">402: </a>    <span class="php-keyword1">class</span> <a id="WP_Post" href="#WP_Post">WP_Post</a> <span class="php-keyword1">extends</span> StdClass { }
+</span><span id="403" class="l"><a class="l" href="#403">403: </a>}
+</span><span id="404" class="l"><a class="l" href="#404">404: </a></span></code></pre>
 
 	<div id="footer">
 		Multisite Taxonomy Widget API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
