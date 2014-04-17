@@ -3,7 +3,7 @@
 Plugin Name: Multisite Taxonomy Widget
 Plugin URI: https://github.com/lloc/Multisite-Taxonomy-Widget
 Description: List the latest posts of a specific taxonomy from your blog-network.
-Version: 0.7
+Version: 0.7.1
 Author: Dennis Ploetner 
 Author URI: http://lloc.de/
 */
@@ -110,10 +110,10 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		$instance['name']     = strip_tags( $new_instance['name'] );
 
 		$temp              = (int) $new_instance['limit'];
-		$instance['limit'] = ( $temp > 0 || $temp == -1 ? $temp : 10 );
+		$instance['limit'] = ( $temp > 0 || -1 == $temp ? $temp : 10 );
 
 		$temp                  = (int) $new_instance['thumbnail'];
-		$instance['thumbnail'] = ( $temp >= 0 ? $temp : 0 );
+		$instance['thumbnail'] = ( 0 <= $temp ? $temp : 0 );
 		return $instance;
 	}
 
@@ -191,7 +191,7 @@ function mtw_get_posts( array $instance, array $posts ) {
 		'posts_per_page' => $instance['limit'],
 	);
 	$query   = new WP_Query( $args );
-	$ts_size = ( !empty( $instance['thumbnail'] ) ?
+	$ts_size = ( ! empty( $instance['thumbnail'] ) ?
 		array( (int) $instance['thumbnail'], (int) $instance['thumbnail'] ) :
 		'thumbnail'
 	);
@@ -200,7 +200,7 @@ function mtw_get_posts( array $instance, array $posts ) {
 		$query->post->mtw_ts    = get_the_time( 'U', $query->post->ID );
 		$query->post->mtw_href  = get_permalink( $query->post->ID );
 		$query->post->mtw_thumb = get_the_post_thumbnail( $query->post->ID, $ts_size );
-		$posts[] = mtw_post_faxctory( $query->post );
+		$posts[] = mtw_post_factory( $query->post );
 	}
 	usort( $posts, 'mtw_cmp_posts' );
 	wp_reset_query();
@@ -231,7 +231,7 @@ function mtw_get_posts_from_blogs( array $instance ) {
 	global $wpdb;
 	$posts = mtw_get_posts( $instance, array() );
 	$blogs = $wpdb->get_col(
-		"SELECT blog_id FROM {$wpdb->blogs} WHERE blog_id != {$wpdb->blogid} AND site_id = {$wpdb->siteid} AND spam = 0 AND deleted = 0 AND archived = '0'"
+		"SELECT blog_id FROM {$wpdb->blogs} WHERE blog_id <> {$wpdb->blogid} AND site_id = {$wpdb->siteid} AND spam = 0 AND deleted = 0 AND archived = '0'"
 	);
 	if ( $blogs ) {
 		foreach ( $blogs as $blog_id ) {
@@ -312,7 +312,7 @@ add_shortcode( 'mtw_posts', 'mtw_create_shortcode' );
  * function:
  * <code>
  * function my_get_thumbnail( WP_Post $post, array $atts ) {
- *     if ( !empty( $atts['thumbnail'] ) ) {
+ *     if ( ! empty( $atts['thumbnail'] ) ) {
  *         return sprintf(
  *             '<a href="%s" title="%s">%s</a>',
  *             $post->mtw_href,
@@ -330,7 +330,7 @@ add_shortcode( 'mtw_posts', 'mtw_create_shortcode' );
  * @return string
  */
 function mtw_get_thumbnail( WP_Post $post, array $atts ) {
-	if ( !empty( $atts['thumbnail'] ) ) {
+	if ( ! empty( $atts['thumbnail'] ) ) {
 		if ( has_filter( 'mtw_thumbnail_output_filter' ) ) {
 			return apply_filters(
 				'mtw_thumbnail_output_filter',
@@ -383,7 +383,7 @@ function mtw_get_formatelements( array $args ) {
  * @return mixed
  * @since 0.7
  */
-function mtw_post_faxctory( $obj ) {
+function mtw_post_factory( $obj ) {
 	if ( is_object( $obj ) && $obj instanceof StdClass ) {
 		$new = new WP_Post;
 		foreach ( $obj as $key => $value ) {
@@ -394,7 +394,7 @@ function mtw_post_faxctory( $obj ) {
 	return $obj;
 }
 
-if ( !class_exists( 'WP_Post' ) ) {
+if ( ! class_exists( 'WP_Post' ) ) {
 	/**
 	 * WP_Post
 	 * 
