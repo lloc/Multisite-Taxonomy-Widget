@@ -3,8 +3,8 @@ Contributors: realloc
 Donate link: http://www.greenpeace.org/international/en/supportus/
 Tags: multisite, recent posts, taxonomy, category, tag, widget
 Requires at least: 3.2.1
-Tested up to: 3.9
-Stable tag: 0.7.1
+Tested up to: 4.0
+Stable tag: 0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,15 +25,10 @@ There is an [introduction](https://github.com/lloc/Multisite-Taxonomy-Widget#mul
 
 == Changelog ==
 
-= 0.7.1 =
-* Minor enhancements
+= 0.8 =
+* Bugfix: Strict standards and phpdocs
 
-= 0.7 =
-* Fix: WordPress 3.6 will use posts as objects of WP_Post (and not StdClass anymore)
- 
-= 0.6 =
-* Some small enhancements
-* it_IT is now included
+[...]
 
 = 0.5 =
 * Filter added: You can override the tags used for the list output using `mtw_formatelements_output_filter`.
@@ -46,9 +41,7 @@ There is an [introduction](https://github.com/lloc/Multisite-Taxonomy-Widget#mul
 * Shortcode [mtw_posts] is now available. You can use taxonomy, name and limit as parameters.
 * Filters added: You can override the output using `mtw_shortcode_output_filter` or `mtw_widget_output_filter`. 
 
-= 0.2 =
-* Support for l8n
-* de_DE is now included
+[...]
 
 = 0.1 =
 * Initial version

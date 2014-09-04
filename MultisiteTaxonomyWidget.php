@@ -3,7 +3,7 @@
 Plugin Name: Multisite Taxonomy Widget
 Plugin URI: https://github.com/lloc/Multisite-Taxonomy-Widget
 Description: List the latest posts of a specific taxonomy from your blog-network.
-Version: 0.7.1
+Version: 0.8
 Author: Dennis Ploetner 
 Author URI: http://lloc.de/
 */
@@ -60,7 +60,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	 * @param array $args
 	 * @param array $instance
 	 */
-	public function widget( array $args, array $instance ) {
+	public function widget( $args, $instance ) {
 		$args = mtw_get_formatelements( $args );
 		echo $args['before_widget'];
 		$title = apply_filters( 'widget_title', $instance['title'] );
@@ -102,7 +102,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	 * @param array $old_instance
 	 * @return array
 	 */
-	public function update( array $new_instance, array $old_instance ) {
+	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 
 		$instance['title']    = strip_tags( $new_instance['title'] );
@@ -119,9 +119,9 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 
 	/**
 	 * Form
-	 * @param $instance
+	 * @param array $instance
 	 */
-	public function form( array $instance ) {
+	public function form( $instance ) {
 		printf(
 			'<p><label for="%1$s">%2$s:</label> <input class="widefat" id="%1$s" name="%3$s" type="text" value="%4$s" /></p>',
 			$this->get_field_id( 'title' ),
