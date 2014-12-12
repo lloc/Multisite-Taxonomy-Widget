@@ -134,13 +134,14 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			$this->get_field_name( 'title' ),
 			( isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '' )
 		);
+
+		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
 		printf(
 			'<p><label for="%1$s">%2$s:</label> <select class="widefat" id="%1$s" name="%3$s">',
 			$this->get_field_id( 'taxonomy' ),
 			__( 'Taxonomy', 'mtw' ),
 			$this->get_field_name( 'taxonomy' )
 		);
-		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
 		foreach ( $taxonomies as $taxonomy ) {
 			printf(
 				'<option value="%s"%s>%s</option>',
@@ -150,6 +151,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			);
 		}
 		echo '</select></p>';
+
 		printf(
 			'<p><label for="%1$s">%2$s:</label> <input class="widefat" id="%1$s" name="%3$s" type="text" value="%4$s" /></p>',
 			$this->get_field_id( 'name' ),
@@ -157,6 +159,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			$this->get_field_name( 'name' ),
 			( isset( $instance['name'] ) ? esc_attr( $instance['name'] ) : '' )
 		);
+
 		printf(
 			'<p><label for="%1$s">%2$s:</label> <input class="widefat" id="%1$s" name="%3$s" type="text" value="%4$s" /></p>',
 			$this->get_field_id( 'limit' ),
@@ -164,6 +167,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			$this->get_field_name( 'limit' ),
 			( isset( $instance['limit'] ) ? (int) $instance['limit'] : 10 )
 		);
+
 		printf(
 			'<p><label for="%1$s">%2$s:</label> <input class="widefat" id="%1$s" name="%3$s" type="text" value="%4$s" /></p>',
 			$this->get_field_id( 'thumbnail' ),
@@ -172,7 +176,6 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			( isset( $instance['thumbnail'] ) ? (int) $instance['thumbnail'] : 0 )
 		);
 	}
-
 }
 
 add_action( 'widgets_init', create_function( '', 'register_widget( "MultisiteTaxonomyWidget" );' ) );
@@ -189,6 +192,7 @@ add_action( 'widgets_init', create_function( '', 'register_widget( "MultisiteTax
 function mtw_get_posts( array $instance, array $posts ) {
 	$args  = array(
 		'post_type'      => 'any',
+		'posts_per_page' => $instance['limit'],
 		'tax_query'      => array(
 			array(
 				'taxonomy' => sanitize_title( $instance['taxonomy'] ),
@@ -196,7 +200,6 @@ function mtw_get_posts( array $instance, array $posts ) {
 				'terms'    => sanitize_title( $instance['name'] ),
 			),
 		),
-		'posts_per_page' => $instance['limit'],
 	);
 	$query = new WP_Query( $args );
 
@@ -258,9 +261,9 @@ function mtw_get_posts_from_blogs( array $instance ) {
 		'spam'       => 0,
 		'deleted'    => 0,
 	);
-	$blogs   = wp_get_sites( $args );
-	$blog_id = $wpdb->blogid;
 
+	$blog_id = $wpdb->blogid;
+	$blogs   = wp_get_sites( $args );
 	if ( $blogs ) {
 		foreach ( $blogs as $blog ) {
 			if ( $blog_id != $blog->blog_id ) {
@@ -279,11 +282,7 @@ function mtw_get_posts_from_blogs( array $instance ) {
  * @package Mtw
  */
 function mtw_plugin_init() {
-	load_plugin_textdomain(
-		'mtw',
-		false,
-		dirname( plugin_basename( __FILE__ ) ) . '/languages/'
-	);
+	load_plugin_textdomain( 'mtw', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
 
 add_action( 'init', 'mtw_plugin_init' );
