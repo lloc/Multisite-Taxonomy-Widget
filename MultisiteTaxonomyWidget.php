@@ -3,7 +3,7 @@
 Plugin Name: Multisite Taxonomy Widget
 Plugin URI: https://github.com/lloc/Multisite-Taxonomy-Widget
 Description: List the latest posts of a specific taxonomy from your blog-network.
-Version: 0.8
+Version: 1.0
 Author: Dennis Ploetner 
 Author URI: http://lloc.de/
 */
@@ -44,7 +44,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 
 	/**
 	 * Widget
-	 * 
+	 *
 	 * You can use code like this if you want to override the output of
 	 * the method:
 	 * <code>
@@ -57,11 +57,13 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	 * }
 	 * add_filter( 'mtw_widget_output_filter', 'my_widget_output' );
 	 * </code>
+	 *
 	 * @param array $args
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
 		$args = mtw_get_formatelements( $args );
+
 		echo $args['before_widget'];
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		if ( $title ) {
@@ -69,26 +71,23 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			echo $title;
 			echo $args['after_title'];
 		}
+
 		$posts = mtw_get_posts_from_blogs( $instance );
-		if ( $posts ) { 
+		if ( $posts ) {
 			echo $args['before_mtw_list'];
+
 			foreach ( $posts as $post ) {
 				echo $args['before_mtw_item'];
+
 				if ( has_filter( 'mtw_widget_output_filter' ) ) {
-					echo apply_filters(
-						'mtw_widget_output_filter',
-						$post,
-						$instance
-					);
+					echo apply_filters( 'mtw_widget_output_filter', $post, $instance );
+				} else {
+					$thumbnail  = mtw_get_thumbnail( $post, $instance );
+					$post_title = apply_filters( 'the_title', $post->post_title );
+
+					printf( '%s <a href="%s">%s</a>', $thumbnail, $post->mtw_href, $post_title );
 				}
-				else {
-					printf(
-						'%s <a href="%s">%s</a>',
-						mtw_get_thumbnail( $post, $instance ),
-						$post->mtw_href,
-						apply_filters( 'the_title', $post->post_title )
-					);
-				}
+
 				echo $args['after_mtw_item'];
 			}
 			echo $args['after_mtw_list'];
@@ -98,8 +97,10 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 
 	/**
 	 * Update
+	 *
 	 * @param array $new_instance
 	 * @param array $old_instance
+	 *
 	 * @return array
 	 */
 	public function update( $new_instance, $old_instance ) {
@@ -110,16 +111,20 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		$instance['name']     = strip_tags( $new_instance['name'] );
 
 		$temp              = (int) $new_instance['limit'];
-		$instance['limit'] = ( $temp > 0 || -1 == $temp ? $temp : 10 );
+		$instance['limit'] = ( $temp > 0 || - 1 == $temp ? $temp : 10 );
 
 		$temp                  = (int) $new_instance['thumbnail'];
 		$instance['thumbnail'] = ( 0 <= $temp ? $temp : 0 );
+
 		return $instance;
 	}
 
 	/**
 	 * Form
+	 *
 	 * @param array $instance
+	 *
+	 * @return string|void
 	 */
 	public function form( $instance ) {
 		printf(
@@ -135,7 +140,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			__( 'Taxonomy', 'mtw' ),
 			$this->get_field_name( 'taxonomy' )
 		);
-		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' ); 
+		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
 		foreach ( $taxonomies as $taxonomy ) {
 			printf(
 				'<option value="%s"%s>%s</option>',
@@ -169,77 +174,103 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	}
 
 }
+
 add_action( 'widgets_init', create_function( '', 'register_widget( "MultisiteTaxonomyWidget" );' ) );
 
 /**
  * Get posts
  * @package Mtw
+ *
  * @param array $instance
  * @param array $posts
+ *
  * @return array
  */
 function mtw_get_posts( array $instance, array $posts ) {
 	$args  = array(
-		'post_type' => 'any',
-		'tax_query' => array(
+		'post_type'      => 'any',
+		'tax_query'      => array(
 			array(
 				'taxonomy' => sanitize_title( $instance['taxonomy'] ),
-				'field' => 'slug',
-				'terms' => sanitize_title( $instance['name'] ),
+				'field'    => 'slug',
+				'terms'    => sanitize_title( $instance['name'] ),
 			),
 		),
 		'posts_per_page' => $instance['limit'],
 	);
-	$query   = new WP_Query( $args );
+	$query = new WP_Query( $args );
+
 	$ts_size = ( ! empty( $instance['thumbnail'] ) ?
 		array( (int) $instance['thumbnail'], (int) $instance['thumbnail'] ) :
 		'thumbnail'
 	);
+
 	while ( $query->have_posts() ) {
 		$query->next_post();
+
 		$query->post->mtw_ts    = get_the_time( 'U', $query->post->ID );
 		$query->post->mtw_href  = get_permalink( $query->post->ID );
 		$query->post->mtw_thumb = get_the_post_thumbnail( $query->post->ID, $ts_size );
-		$posts[] = mtw_post_factory( $query->post );
+
+		$posts[]                = $query->post;
 	}
 	usort( $posts, 'mtw_cmp_posts' );
+
 	wp_reset_query();
 	wp_reset_postdata();
-	return( array_slice( $posts, 0, $instance['limit'] ) );
+
+	return ( array_slice( $posts, 0, $instance['limit'] ) );
 }
 
 /**
  * Compare posts
  * @package Mtw
+ *
  * @param WP_Post $a
  * @param WP_Post $b
+ *
  * @return int
  */
 function mtw_cmp_posts( WP_Post $a, WP_Post $b ) {
-	if ( $a->mtw_ts == $b->mtw_ts )
+	if ( $a->mtw_ts == $b->mtw_ts ) {
 		return 0;
-	return( $a->mtw_ts > $b->mtw_ts ? (-1) : 1 );
+	}
+
+	return ( $a->mtw_ts > $b->mtw_ts ? ( - 1 ) : 1 );
 }
 
 /**
  * Get posts from blogs
  * @package Mtw
+ *
  * @param array $instance
+ *
  * @return array
  */
 function mtw_get_posts_from_blogs( array $instance ) {
 	global $wpdb;
-	$posts = mtw_get_posts( $instance, array() );
-	$blogs = $wpdb->get_col(
-		"SELECT blog_id FROM {$wpdb->blogs} WHERE blog_id <> {$wpdb->blogid} AND site_id = {$wpdb->siteid} AND spam = 0 AND deleted = 0 AND archived = '0'"
+
+	$posts   = mtw_get_posts( $instance, array() );
+	$args    = array(
+		'network_id' => $wpdb->siteid,
+		'public'     => 1,
+		'archived'   => 0,
+		'spam'       => 0,
+		'deleted'    => 0,
 	);
+	$blogs   = wp_get_sites( $args );
+	$blog_id = $wpdb->blogid;
+
 	if ( $blogs ) {
-		foreach ( $blogs as $blog_id ) {
-			switch_to_blog( $blog_id );
-			$posts = mtw_get_posts( $instance, $posts );
-			restore_current_blog();
+		foreach ( $blogs as $blog ) {
+			if ( $blog_id != $blog->blog_id ) {
+				switch_to_blog( $blog->blog_id );
+				$posts = mtw_get_posts( $instance, $posts );
+				restore_current_blog();
+			}
 		}
 	}
+
 	return $posts;
 }
 
@@ -254,11 +285,12 @@ function mtw_plugin_init() {
 		dirname( plugin_basename( __FILE__ ) ) . '/languages/'
 	);
 }
+
 add_action( 'init', 'mtw_plugin_init' );
 
 /**
  * Create shortcode
- * 
+ *
  * You can use code like this if you want to override the output of the
  * function:
  * <code>
@@ -272,7 +304,9 @@ add_action( 'init', 'mtw_plugin_init' );
  * add_filter( 'mtw_shortcode_output_filter', 'my_create_shortcode' );
  * </code>
  * @package Mtw
+ *
  * @param array $atts
+ *
  * @return string
  */
 function mtw_create_shortcode( array $atts ) {
@@ -288,8 +322,7 @@ function mtw_create_shortcode( array $atts ) {
 					$post,
 					$atts
 				);
-			}
-			else {
+			} else {
 				$content .= sprintf(
 					'%s <a href="%s">%s</a>',
 					mtw_get_thumbnail( $post, $atts ),
@@ -301,13 +334,15 @@ function mtw_create_shortcode( array $atts ) {
 		}
 		$content .= '</ul>';
 	}
+
 	return $content;
 }
+
 add_shortcode( 'mtw_posts', 'mtw_create_shortcode' );
 
 /**
  * Get thumbnail
- * 
+ *
  * You can use code like this if you want to override the output of the
  * function:
  * <code>
@@ -325,31 +360,27 @@ add_shortcode( 'mtw_posts', 'mtw_create_shortcode' );
  * add_filter( 'mtw_thumbnail_output_filter', 'my_get_thumbnail' );
  * </code>
  * @package Mtw
+ *
  * @param WP_Post $post
  * @param array $atts
+ *
  * @return string
  */
 function mtw_get_thumbnail( WP_Post $post, array $atts ) {
-	if ( ! empty( $atts['thumbnail'] ) ) {
-		if ( has_filter( 'mtw_thumbnail_output_filter' ) ) {
-			return apply_filters(
-				'mtw_thumbnail_output_filter',
-				$post,
-				$atts
-			);
-		}
-		return sprintf(
-			'<a href="%s">%s</a>',
-			$post->mtw_href,
-			$post->mtw_thumb
-		);
+	if ( has_filter( 'mtw_thumbnail_output_filter' ) ) {
+		return apply_filters( 'mtw_thumbnail_output_filter', $post, $atts );
 	}
-	return '';
+
+	return(
+		! empty( $atts['thumbnail'] ) ?
+		sprintf( '<a href="%s">%s</a>', $post->mtw_href, $post->mtw_thumb ) :
+		''
+	);
 }
 
 /**
  * Get formatelements
- * 
+ *
  * You can use code like this if you want to override the output of the
  * function:
  * <code>
@@ -363,44 +394,16 @@ function mtw_get_thumbnail( WP_Post $post, array $atts ) {
  * add_filter( 'mtw_formatelements_output_filter', 'my_get_formatelements' );
  * </code>
  * @package Mtw
+ *
  * @param array $args
+ *
  * @return array
- */ 
+ */
 function mtw_get_formatelements( array $args ) {
 	$args['before_mtw_list'] = '<ul>';
 	$args['after_mtw_list']  = '</ul>';
 	$args['before_mtw_item'] = '<li>';
 	$args['after_mtw_item']  = '</li>';
+
 	return apply_filters( 'mtw_formatelements_output_filter', $args );
-}
-
-/**
- * Post factory
- * 
- * Factory as workaround for the new introduced class WP_Post
- * @package Mtw
- * @param mixed $obj
- * @return mixed
- * @since 0.7
- */
-function mtw_post_factory( $obj ) {
-	if ( is_object( $obj ) && $obj instanceof StdClass ) {
-		$new = new WP_Post;
-		foreach ( $obj as $key => $value ) {
-			$new->$key = $value;
-		}
-		return $new;
-	}
-	return $obj;
-}
-
-if ( ! class_exists( 'WP_Post' ) ) {
-	/**
-	 * WP_Post
-	 * 
-	 * There will be no core class WP_Post if the WordPress version is 
-	 * not 3.6 and higher.
-	 * @package Mtw
-	 */
-	class WP_Post extends StdClass { }
 }

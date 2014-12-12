@@ -2,9 +2,9 @@
 Contributors: realloc
 Donate link: http://www.greenpeace.org/international/en/supportus/
 Tags: multisite, recent posts, taxonomy, category, tag, widget
-Requires at least: 3.2.1
-Tested up to: 4.0
-Stable tag: 0.8
+Requires at least: 3.6.1
+Tested up to: 4.1
+Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,9 +24,12 @@ Display a **recent posts**-widget of all your posts in your blog-network which h
 There is an [introduction](https://github.com/lloc/Multisite-Taxonomy-Widget#multisite-taxonomy-widget) for further information.
 
 == Changelog ==
+= 1.0 =
+* tagged as stable
+* WordPress Coding Standards
 
 = 0.8 =
-* Bugfix: Strict standards and phpdocs
+* Bugfix: Strict standards and PHPDocs
 
 [...]
 
