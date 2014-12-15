@@ -266,8 +266,8 @@ function mtw_get_posts_from_blogs( array $instance ) {
 	$blogs   = wp_get_sites( $args );
 	if ( $blogs ) {
 		foreach ( $blogs as $blog ) {
-			if ( $blog_id != $blog->blog_id ) {
-				switch_to_blog( $blog->blog_id );
+			if ( $blog_id != $blog['blog_id'] ) {
+				switch_to_blog( $blog['blog_id'] );
 				$posts = mtw_get_posts( $instance, $posts );
 				restore_current_blog();
 			}
