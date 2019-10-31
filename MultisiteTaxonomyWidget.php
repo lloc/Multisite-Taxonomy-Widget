@@ -3,7 +3,7 @@
 Plugin Name: Multisite Taxonomy Widget
 Plugin URI: https://github.com/lloc/Multisite-Taxonomy-Widget
 Description: List the latest posts of a specific taxonomy from your blog-network.
-Version: 1.0
+Version: 1.1
 Author: Dennis Ploetner 
 Author URI: http://lloc.de/
 */
@@ -38,7 +38,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 		parent::__construct(
 			'mtw',
 			'Multisite Taxonomy',
-			array( 'description' => __( 'List the latest posts of a specific taxonomy from the whole blog-network', 'mtw' ) )
+			[ 'description' => __( 'List the latest posts of a specific taxonomy from the whole blog-network', 'mtw' ) ]
 		);
 	}
 
@@ -135,7 +135,7 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 			( isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '' )
 		);
 
-		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
+		$taxonomies = get_taxonomies( [ 'public' => true ], 'objects' );
 		printf(
 			'<p><label for="%1$s">%2$s:</label> <select class="widefat" id="%1$s" name="%3$s">',
 			$this->get_field_id( 'taxonomy' ),
@@ -178,7 +178,9 @@ class MultisiteTaxonomyWidget extends WP_Widget {
 	}
 }
 
-add_action( 'widgets_init', create_function( '', 'register_widget( "MultisiteTaxonomyWidget" );' ) );
+add_action( 'widgets_init', function() {
+	register_widget( 'MultisiteTaxonomyWidget' );
+} );
 
 /**
  * Get posts
@@ -190,23 +192,20 @@ add_action( 'widgets_init', create_function( '', 'register_widget( "MultisiteTax
  * @return array
  */
 function mtw_get_posts( array $instance, array $posts ) {
-	$args  = array(
+	$args  = [
 		'post_type'      => 'any',
 		'posts_per_page' => $instance['limit'],
-		'tax_query'      => array(
-			array(
+		'tax_query'      => [
+			[
 				'taxonomy' => sanitize_title( $instance['taxonomy'] ),
 				'field'    => 'slug',
 				'terms'    => sanitize_title( $instance['name'] ),
-			),
-		),
-	);
-	$query = new WP_Query( $args );
+			],
+		],
+	];
 
-	$ts_size = ( ! empty( $instance['thumbnail'] ) ?
-		array( (int) $instance['thumbnail'], (int) $instance['thumbnail'] ) :
-		'thumbnail'
-	);
+	$query   = new WP_Query( $args );
+	$ts_size = ( ! empty( $instance['thumbnail'] ) ? [ (int) $instance['thumbnail'], (int) $instance['thumbnail'] ] : 'thumbnail' );
 
 	while ( $query->have_posts() ) {
 		$query->next_post();
@@ -253,17 +252,17 @@ function mtw_cmp_posts( WP_Post $a, WP_Post $b ) {
 function mtw_get_posts_from_blogs( array $instance ) {
 	global $wpdb;
 
-	$posts   = mtw_get_posts( $instance, array() );
-	$args    = array(
+	$posts   = mtw_get_posts( $instance, [] );
+	$args    = [
 		'network_id' => $wpdb->siteid,
 		'public'     => 1,
 		'archived'   => 0,
 		'spam'       => 0,
 		'deleted'    => 0,
-	);
+	];
 
 	$blog_id = $wpdb->blogid;
-	$blogs   = wp_get_sites( $args );
+	$blogs   = get_sites( $args );
 	if ( $blogs ) {
 		foreach ( $blogs as $blog ) {
 			if ( $blog_id != $blog['blog_id'] ) {
