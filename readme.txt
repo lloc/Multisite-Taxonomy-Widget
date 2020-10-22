@@ -26,6 +26,11 @@ There is an [introduction](https://github.com/lloc/Multisite-Taxonomy-Widget#mul
 
 == Changelog ==
 
+= 1.2 =
+* Tested with latest WordPress version
+* Unit test structure added
+* Automatic deploy to WordPress plugin dir set
+
 = 1.1 =
 * subsitition of wp_get_sites with get_sites
 * minimum is now WordPress 4.6

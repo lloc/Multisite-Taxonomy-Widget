@@ -23,7 +23,8 @@
     }
   },
   "scripts": {
-    "test": "phpunit"
+    "test": "phpunit",
+    "coverage": "phpunit --coverage-html docs/coverage"
   },
   "authors": [
     {

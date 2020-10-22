@@ -131,12 +131,13 @@ class Posts {
 
 			$posts[]                = $query->post;
 		}
+
 		usort( $posts,  [ Posts::class, 'cmp_posts' ] );
 
 		wp_reset_query();
 		wp_reset_postdata();
 
-		return ( array_slice( $posts, 0, $instance['limit'] ) );
+		return array_slice( $posts, 0, $instance['limit'] );
 	}
 
 	/**
@@ -147,12 +148,8 @@ class Posts {
 	 *
 	 * @return int
 	 */
-	public static function cmp_posts( \WP_Post $a, \WP_Post $b ) {
-		if ( $a->mtw_ts == $b->mtw_ts ) {
-			return 0;
-		}
-
-		return ( $a->mtw_ts > $b->mtw_ts ? ( - 1 ) : 1 );
+	public static function cmp_posts( \WP_Post $a, \WP_Post $b ): int {
+		return $a->mtw_ts <=> $b->mtw_ts;
 	}
 
 	/**
