@@ -1,5 +1,7 @@
 .idea/
+.phpunit.cache/
 .phpunit.result.cache
 composer.lock
 vendor/
 docs/
+tests/coverage/
