@@ -76,8 +76,8 @@ class TestMtw extends MtwUnitTestCase {
 		$b->ID         = 42;
 
 		$sites = array(
-			array( 'blog_id' => 1 ),
-			array( 'blog_id' => 2 ),
+			(object) array( 'blog_id' => 1 ),
+			(object) array( 'blog_id' => 2 ),
 		);
 
 		Functions\expect( 'get_posts' )->times( 2 )->andReturn( array( $a ), array( $b ) );
@@ -120,8 +120,8 @@ class TestMtw extends MtwUnitTestCase {
 		$b->ID         = 42;
 
 		$sites = array(
-			array( 'blog_id' => 1 ),
-			array( 'blog_id' => 2 ),
+			(object) array( 'blog_id' => 1 ),
+			(object) array( 'blog_id' => 2 ),
 		);
 
 		Functions\expect( 'get_posts' )->times( 2 )->andReturn( array( $a ), array( $b ) );

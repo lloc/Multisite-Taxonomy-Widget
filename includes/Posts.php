@@ -167,11 +167,11 @@ class Posts {
 		);
 
 		$blog_id = $wpdb->blogid;
-		$blogs   = get_sites( $args );
-		if ( $blogs ) {
-			foreach ( $blogs as $blog ) {
-				if ( $blog_id != $blog['blog_id'] ) {
-					switch_to_blog( $blog['blog_id'] );
+		$sites   = get_sites( $args );
+		if ( $sites ) {
+			foreach ( $sites as $site ) {
+				if ( $blog_id != $site->blog_id ) {
+					switch_to_blog( $site->blog_id );
 					$posts = self::get_posts( $instance, $posts );
 					restore_current_blog();
 				}
