@@ -4,9 +4,12 @@ namespace lloc\Mtw;
 
 /**
  * Widget
+ *
  * @package Mtw
  */
 class Mtw extends \WP_Widget {
+
+	const DEFAULT_LIMIT = 10;
 
 	/**
 	 * Constructor
@@ -15,7 +18,7 @@ class Mtw extends \WP_Widget {
 		parent::__construct(
 			'mtw',
 			'Multisite Taxonomy Widget',
-			[ 'description' => __( 'List the latest posts of a specific taxonomy from the whole blog-network', 'multisite-taxonomy-widget' ) ]
+			array( 'description' => __( 'List the latest posts of a specific taxonomy from the whole blog-network', 'multisite-taxonomy-widget' ) )
 		);
 	}
 
@@ -24,6 +27,7 @@ class Mtw extends \WP_Widget {
 	 *
 	 * You can use code like this if you want to override the output of
 	 * the method:
+	 *
 	 * <code>
 	 * function my_widget_output( $post, array $atts ) {
 	 *     return sprintf(
@@ -41,15 +45,15 @@ class Mtw extends \WP_Widget {
 	public function widget( $args, $instance ) {
 		$args = $this->get_formatelements( $args );
 
-		echo $args['before_widget'];
-		$title = apply_filters( 'widget_title', $instance['title'] );
+		echo $args['before_widget'] ?? '';
+		$title = apply_filters( 'widget_title', $instance['title'] ?? '' );
 		if ( $title ) {
-			echo $args['before_title'];
+			echo $args['before_title'] ?? '';
 			echo $title;
-			echo $args['after_title'];
+			echo $args['after_title'] ?? '';
 		}
 
-		$posts = mtw_get_posts_from_blogs( $instance );
+		$posts = Posts::get_posts_from_blogs( $instance );
 		if ( $posts ) {
 			echo $args['before_mtw_list'];
 
@@ -69,7 +73,7 @@ class Mtw extends \WP_Widget {
 			}
 			echo $args['after_mtw_list'];
 		}
-		echo $args['after_widget'];
+		echo $args['after_widget'] ?? '';
 	}
 
 	/**
@@ -83,14 +87,14 @@ class Mtw extends \WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 
-		$instance['title']    = strip_tags( $new_instance['title'] );
-		$instance['taxonomy'] = strip_tags( $new_instance['taxonomy'] );
-		$instance['name']     = strip_tags( $new_instance['name'] );
+		$instance['title']    = strip_tags( $new_instance['title'] ?? '' );
+		$instance['taxonomy'] = strip_tags( $new_instance['taxonomy'] ?? '' );
+		$instance['name']     = strip_tags( $new_instance['name'] ?? '' );
 
-		$temp              = (int) $new_instance['limit'];
-		$instance['limit'] = ( $temp > 0 || - 1 == $temp ? $temp : 10 );
+		$temp              = intval( $new_instance['limit'] ?? 0 );
+		$instance['limit'] = ( $temp > 0 || - 1 == $temp ? $temp : self::DEFAULT_LIMIT );
 
-		$temp                  = (int) $new_instance['thumbnail'];
+		$temp                  = intval( $new_instance['thumbnail'] ?? 0 );
 		$instance['thumbnail'] = ( 0 <= $temp ? $temp : 0 );
 
 		return $instance;
@@ -112,7 +116,7 @@ class Mtw extends \WP_Widget {
 			( isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '' )
 		);
 
-		$taxonomies = get_taxonomies( [ 'public' => true ], 'objects' );
+		$taxonomies = get_taxonomies( array( 'public' => true ), 'objects' );
 		printf(
 			'<p><label for="%1$s">%2$s:</label> <select class="widefat" id="%1$s" name="%3$s">',
 			$this->get_field_id( 'taxonomy' ),
@@ -169,6 +173,7 @@ class Mtw extends \WP_Widget {
 	 * }
 	 * add_filter( 'mtw_formatelements_output_filter', 'my_get_formatelements' );
 	 * </code>
+	 *
 	 * @package Mtw
 	 *
 	 * @param array $args
@@ -183,5 +188,4 @@ class Mtw extends \WP_Widget {
 
 		return apply_filters( 'mtw_formatelements_output_filter', $args );
 	}
-
 }

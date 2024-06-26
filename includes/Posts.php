@@ -14,8 +14,9 @@ class Posts {
 	 *
 	 * You can use code like this if you want to override the output of the
 	 * function:
+	 *
 	 * <code>
-	 * function my_get_thumbnail( WP_Post $post, array $atts ) {
+	 * function my_get_thumbnail( WP_Post $post, array $atts, ?string $default = null ) {
 	 *     if ( ! empty( $atts['thumbnail'] ) ) {
 	 *         return sprintf(
 	 *             '<a href="%s" title="%s">%s</a>',
@@ -24,14 +25,16 @@ class Posts {
 	 *             $post->mtw_thumb
 	 *         );
 	 *     }
-	 *     return '';
+	 *     return $default
 	 * }
-	 * add_filter( 'mtw_thumbnail_output_filter', 'my_get_thumbnail' );
+	 * add_filter( 'mtw_thumbnail_output_filter', 'my_get_thumbnail', 10, 3 );
 	 * </code>
+	 *
 	 * @package Mtw
 	 *
 	 * @param \WP_Post $post
-	 * @param array $atts
+	 * @param array    $atts
+	 * @param ?string  $default
 	 *
 	 * @return string
 	 */
@@ -40,11 +43,11 @@ class Posts {
 			return apply_filters( 'mtw_thumbnail_output_filter', $post, $atts );
 		}
 
-		return(
-			! empty( $atts['thumbnail'] ) ?
-			sprintf( '<a href="%s">%s</a>', $post->mtw_href, $post->mtw_thumb ) :
-			''
-		);
+		if ( empty( $atts['thumbnail'] ) ) {
+			return '';
+		}
+
+		return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $post->mtw_href ), $post->mtw_thumb );
 	}
 
 	/**
@@ -52,6 +55,7 @@ class Posts {
 	 *
 	 * You can use code like this if you want to override the output of the
 	 * function:
+	 *
 	 * <code>
 	 * function my_create_shortcode( WP_Post $post, array $atts ) {
 	 *     return sprintf(
@@ -67,34 +71,28 @@ class Posts {
 	 *
 	 * @return string
 	 */
-	public static function mtw_posts( array $atts ): string {
-		$posts   = self::get_posts_from_blogs( $atts );
-		$content = '';
+	public static function create_shortcode( array $atts ): string {
+		$posts = self::get_posts_from_blogs( $atts );
 
-		if ( $posts ) {
-			$content = '<ul>';
-
-			foreach ( $posts as $post ) {
-				$content .= '<li>';
-
-				if ( has_filter( 'mtw_shortcode_output_filter' ) ) {
-					$content .= apply_filters('mtw_shortcode_output_filter', $post, $atts );
-				} else {
-					$content .= sprintf(
-						'%s <a href="%s">%s</a>',
-						self::get_thumbnail( $post, $atts ),
-						$post->mtw_href,
-						apply_filters( 'the_title', $post->post_title )
-					);
-				}
-
-				$content .= '</li>';
-			}
-
-			$content .= '</ul>';
+		if ( empty( $posts ) ) {
+			return apply_filters( 'mtw_posts_no_posts_found', '' );
 		}
 
-		return $content;
+		$list = array();
+		foreach ( $posts as $post ) {
+			if ( has_filter( 'mtw_shortcode_output_filter' ) ) {
+				$list[] = apply_filters( 'mtw_shortcode_output_filter', $post, $atts );
+			} else {
+				$list[] = sprintf(
+					'%1$s <a href="%2$s">%3$s</a>',
+					self::get_thumbnail( $post, $atts ),
+					esc_url( $post->mtw_href ),
+					apply_filters( 'the_title', $post->post_title )
+				);
+			}
+		}
+
+		return sprintf( '<ul><li>%s</li></ul>', implode( '</li><li>', $list ) );
 	}
 
 
@@ -107,37 +105,32 @@ class Posts {
 	 * @return array
 	 */
 	public static function get_posts( array $instance, array $posts ) {
-		$args  = [
+		$limit = $instance['limit'] ?? Mtw::DEFAULT_LIMIT;
+		$args  = array(
 			'post_type'      => 'any',
-			'posts_per_page' => $instance['limit'],
-			'tax_query'      => [
-				[
-					'taxonomy' => sanitize_title( $instance['taxonomy'] ),
+			'posts_per_page' => $limit,
+			'tax_query'      => array(
+				array(
+					'taxonomy' => sanitize_title( $instance['taxonomy'] ?? '' ),
 					'field'    => 'slug',
-					'terms'    => sanitize_title( $instance['name'] ),
-				],
-			],
-		];
+					'terms'    => sanitize_title( $instance['name'] ?? '' ),
+				),
+			),
+		);
 
-		$query   = new \WP_Query( $args );
-		$ts_size = ( ! empty( $instance['thumbnail'] ) ? [ (int) $instance['thumbnail'], (int) $instance['thumbnail'] ] : 'thumbnail' );
+		$ts_size = ( ! empty( $instance['thumbnail'] ) ? array( (int) $instance['thumbnail'], (int) $instance['thumbnail'] ) : 'thumbnail' );
 
-		while ( $query->have_posts() ) {
-			$query->next_post();
+		foreach ( get_posts( $args ) as $post ) {
+			$post->mtw_ts    = get_the_time( 'U', $post->ID );
+			$post->mtw_href  = get_permalink( $post->ID );
+			$post->mtw_thumb = get_the_post_thumbnail( $post->ID, $ts_size );
 
-			$query->post->mtw_ts    = get_the_time( 'U', $query->post->ID );
-			$query->post->mtw_href  = get_permalink( $query->post->ID );
-			$query->post->mtw_thumb = get_the_post_thumbnail( $query->post->ID, $ts_size );
-
-			$posts[]                = $query->post;
+			$posts[] = $post;
 		}
 
-		usort( $posts,  [ Posts::class, 'cmp_posts' ] );
+		usort( $posts, array( self::class, 'cmp_posts' ) );
 
-		wp_reset_query();
-		wp_reset_postdata();
-
-		return array_slice( $posts, 0, $instance['limit'] );
+		return array_slice( $posts, 0, $limit );
 	}
 
 	/**
@@ -154,6 +147,7 @@ class Posts {
 
 	/**
 	 * Get posts from blogs
+	 *
 	 * @package Mtw
 	 *
 	 * @param array $instance
@@ -163,14 +157,14 @@ class Posts {
 	public static function get_posts_from_blogs( array $instance ) {
 		global $wpdb;
 
-		$posts   = self::get_posts( $instance, [] );
-		$args    = [
+		$posts = self::get_posts( $instance, array() );
+		$args  = array(
 			'network_id' => $wpdb->siteid,
 			'public'     => 1,
 			'archived'   => 0,
 			'spam'       => 0,
 			'deleted'    => 0,
-		];
+		);
 
 		$blog_id = $wpdb->blogid;
 		$blogs   = get_sites( $args );
@@ -186,5 +180,4 @@ class Posts {
 
 		return $posts;
 	}
-
 }

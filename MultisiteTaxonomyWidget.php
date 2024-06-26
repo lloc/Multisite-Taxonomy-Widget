@@ -37,4 +37,4 @@ function mtw_get_path() {
 	return plugin_basename( __FILE__ );
 }
 
-\lloc\Mtw\Plugin::load();
+\lloc\Mtw\Plugin::init();
