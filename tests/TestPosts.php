@@ -5,6 +5,7 @@ namespace lloc\MtwTests;
 use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
 use lloc\Mtw\Posts;
+use Mockery\Mock;
 
 class TestPosts extends MtwUnitTestCase {
 
@@ -127,5 +128,15 @@ class TestPosts extends MtwUnitTestCase {
 		Filters\expectApplied( 'mtw_posts_no_posts_found' )->once()->andReturn( $expected );
 
 		$this->assertEquals( $expected, ( new Posts() )->create_shortcode( array() ) );
+	}
+
+	public function test_get_thumbnail_has_filter() {
+		$post = \Mockery::mock( '\WP_Post' );
+
+		Functions\expect( 'has_filter' )->once()->with( 'mtw_thumbnail_output_filter' )->andReturnTrue();
+
+		Filters\expectApplied( 'mtw_thumbnail_output_filter' )->once()->andReturn( 'Test' );
+
+		$this->assertEquals( 'Test', ( new Posts() )->get_thumbnail( $post, array() ) );
 	}
 }

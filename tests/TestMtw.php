@@ -101,4 +101,48 @@ class TestMtw extends MtwUnitTestCase {
 			)
 		);
 	}
+
+	public function test_widget_with_filter() {
+		global $wpdb;
+
+		$wpdb         = \Mockery::mock( '\WPDB' );
+		$wpdb->siteid = 1;
+		$wpdb->blogid = 1;
+
+		$a             = \Mockery::mock( '\WP_Post' );
+		$a->post_title = 'Test 1';
+		$a->slug       = 'test-1';
+		$a->ID         = 13;
+
+		$b             = \Mockery::mock( '\WP_Post' );
+		$b->post_title = 'Test 2';
+		$b->slug       = 'test-2';
+		$b->ID         = 42;
+
+		$sites = array(
+			array( 'blog_id' => 1 ),
+			array( 'blog_id' => 2 ),
+		);
+
+		Functions\expect( 'get_posts' )->times( 2 )->andReturn( array( $a ), array( $b ) );
+		Functions\expect( 'get_sites' )->once()->andReturn( $sites );
+		Functions\expect( 'get_the_time' )->times( 2 )->andReturn( 1234567890 );
+		Functions\expect( 'get_permalink' )->times( 2 )->andReturn( $a->slug, $b->slug );
+		Functions\expect( 'get_the_post_thumbnail' )->times( 2 )->andReturn( 'Thumbnail 1', 'Thumbnail 2' );
+		Functions\expect( 'switch_to_blog' )->once();
+		Functions\expect( 'restore_current_blog' )->once();
+		Functions\expect( 'has_filter' )->times( 2 )->with( 'mtw_widget_output_filter' )->andReturnTrue();
+
+		Filters\expectApplied( 'mtw_widget_output_filter' )->times( 2 )->andReturn( 'Test A', 'Test B' );
+
+		$this->expectOutputString( 'TEST<ul><li>Test A</li><li>Test B</li></ul>' );
+
+		$this->test->widget(
+			array(),
+			array(
+				'title'     => 'TEST',
+				'thumbnail' => 1,
+			)
+		);
+	}
 }
