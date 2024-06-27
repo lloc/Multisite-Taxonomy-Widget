@@ -82,9 +82,7 @@ class Mtw extends \WP_Widget {
 	 *
 	 * @return array
 	 */
-	public function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
-
+	public function update( $new_instance, $instance ) {
 		$instance['title']    = strip_tags( $new_instance['title'] ?? '' );
 		$instance['taxonomy'] = strip_tags( $new_instance['taxonomy'] ?? '' );
 		$instance['name']     = strip_tags( $new_instance['name'] ?? '' );
