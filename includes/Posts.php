@@ -72,7 +72,7 @@ class Posts {
 	 * @return string
 	 */
 	public static function create_shortcode( array $atts ): string {
-		$posts = self::get_posts_from_blogs( $atts );
+		$posts = self::get_posts_from_network( $atts );
 
 		if ( empty( $posts ) ) {
 			return apply_filters( 'mtw_posts_no_posts_found', '' );
@@ -82,19 +82,23 @@ class Posts {
 		foreach ( $posts as $post ) {
 			if ( has_filter( 'mtw_shortcode_output_filter' ) ) {
 				$list[] = apply_filters( 'mtw_shortcode_output_filter', $post, $atts );
-			} else {
-				$list[] = sprintf(
-					'%1$s <a href="%2$s">%3$s</a>',
-					self::get_thumbnail( $post, $atts ),
-					esc_url( $post->mtw_href ),
-					apply_filters( 'the_title', $post->post_title )
-				);
+				continue;
 			}
+
+			$list[] = self::build_link( $post, $atts );
 		}
 
 		return sprintf( '<ul><li>%s</li></ul>', implode( '</li><li>', $list ) );
 	}
 
+	public static function build_link( \WP_Post $post, array $atts ): string {
+		return sprintf(
+			'%1$s <a href="%2$s">%3$s</a>',
+			self::get_thumbnail( $post, $atts ),
+			esc_url( $post->mtw_href ),
+			apply_filters( 'the_title', $post->post_title )
+		);
+	}
 
 	/**
 	 * Get posts
@@ -154,28 +158,15 @@ class Posts {
 	 *
 	 * @return array
 	 */
-	public static function get_posts_from_blogs( array $instance ) {
+	public static function get_posts_from_network( array $instance ) {
 		global $wpdb;
 
 		$posts = self::get_posts( $instance, array() );
-		$args  = array(
-			'network_id' => $wpdb->siteid,
-			'public'     => 1,
-			'archived'   => 0,
-			'spam'       => 0,
-			'deleted'    => 0,
-		);
-
-		$blog_id = $wpdb->blogid;
-		$sites   = get_sites( $args );
-		if ( $sites ) {
-			foreach ( $sites as $site ) {
-				if ( $blog_id != $site->blog_id ) {
-					switch_to_blog( $site->blog_id );
-					$posts = self::get_posts( $instance, $posts );
-					restore_current_blog();
-				}
-			}
+		$sites = ( new RelatedSites( $wpdb->siteid, $wpdb->blogid ) )->get( 'blog_id' );
+		foreach ( $sites as $blog_id ) {
+			switch_to_blog( $blog_id );
+			$posts = self::get_posts( $instance, $posts );
+			restore_current_blog();
 		}
 
 		return $posts;

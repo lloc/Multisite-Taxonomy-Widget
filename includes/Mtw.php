@@ -43,37 +43,35 @@ class Mtw extends \WP_Widget {
 	 * @param array $instance
 	 */
 	public function widget( $args, $instance ) {
-		$args = $this->get_formatelements( $args );
+		$args = ( new FormatElements( $args ) )->get();
 
-		echo $args['before_widget'] ?? '';
+		echo $args['before_widget'];
 		$title = apply_filters( 'widget_title', $instance['title'] ?? '' );
 		if ( $title ) {
-			echo $args['before_title'] ?? '';
+			echo $args['before_title'];
 			echo $title;
-			echo $args['after_title'] ?? '';
+			echo $args['after_title'];
 		}
 
-		$posts = Posts::get_posts_from_blogs( $instance );
+		$posts  = Posts::get_posts_from_network( $instance );
+		$filter = has_filter( 'mtw_widget_output_filter' );
 		if ( $posts ) {
 			echo $args['before_mtw_list'];
 
 			foreach ( $posts as $post ) {
 				echo $args['before_mtw_item'];
 
-				if ( has_filter( 'mtw_widget_output_filter' ) ) {
+				if ( $filter ) {
 					echo apply_filters( 'mtw_widget_output_filter', $post, $instance );
 				} else {
-					$thumbnail  = Posts::get_thumbnail( $post, $instance );
-					$post_title = apply_filters( 'the_title', $post->post_title );
-
-					printf( '%s <a href="%s">%s</a>', $thumbnail, $post->mtw_href, $post_title );
+					echo Posts::build_link( $post, $instance );
 				}
 
 				echo $args['after_mtw_item'];
 			}
 			echo $args['after_mtw_list'];
 		}
-		echo $args['after_widget'] ?? '';
+		echo $args['after_widget'];
 	}
 
 	/**
@@ -156,36 +154,5 @@ class Mtw extends \WP_Widget {
 			$this->get_field_name( 'thumbnail' ),
 			( isset( $instance['thumbnail'] ) ? (int) $instance['thumbnail'] : 0 )
 		);
-	}
-
-	/**
-	 * Get formatelements
-	 *
-	 * You can use code like this if you want to override the output of the
-	 * function:
-	 * <code>
-	 * function my_get_formatelements( $args ) {
-	 *     $args['before_mtw_list'] = '<div>';
-	 *     $args['after_mtw_list']  = '</div>';
-	 *     $args['before_mtw_item'] = '<p>';
-	 *     $args['after_mtw_item']  = '</p>';
-	 *     return $args;
-	 * }
-	 * add_filter( 'mtw_formatelements_output_filter', 'my_get_formatelements' );
-	 * </code>
-	 *
-	 * @package Mtw
-	 *
-	 * @param array $args
-	 *
-	 * @return array
-	 */
-	public function get_formatelements( array $args ) {
-		$args['before_mtw_list'] = '<ul>';
-		$args['after_mtw_list']  = '</ul>';
-		$args['before_mtw_item'] = '<li>';
-		$args['after_mtw_item']  = '</li>';
-
-		return apply_filters( 'mtw_formatelements_output_filter', $args );
 	}
 }

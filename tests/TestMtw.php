@@ -14,20 +14,6 @@ class TestMtw extends MtwUnitTestCase {
 		$this->test = new Mtw();
 	}
 
-	public function test_mtw_get_formatelements() {
-		$expected = array(
-			'test'            => 'abc',
-			'before_mtw_list' => '<ul>',
-			'after_mtw_list'  => '</ul>',
-			'before_mtw_item' => '<li>',
-			'after_mtw_item'  => '</li>',
-		);
-
-		Filters\expectApplied( 'mtw_formatelements_output_filter' )->once()->andReturnFirstArg();
-
-		$this->assertEquals( $expected, $this->test->get_formatelements( array( 'test' => 'abc' ) ) );
-	}
-
 	public function test_form() {
 		$taxonomies = array(
 			(object) array(
@@ -87,7 +73,9 @@ class TestMtw extends MtwUnitTestCase {
 		Functions\expect( 'get_the_post_thumbnail' )->times( 2 )->andReturn( 'Thumbnail 1', 'Thumbnail 2' );
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
-		Functions\expect( 'esc_url' )->times( 2 )->andReturnFirstArg();
+		Functions\expect( 'esc_url' )->times( 4 )->andReturnFirstArg();
+		Functions\expect( 'wp_kses_post' )->times( 8 )->andReturnFirstArg();
+		Functions\expect( 'wp_list_pluck' )->once()->andReturn( array( 1 => 2 ) );
 
 		Filters\expectApplied( 'widget_title' )->once()->andReturnFirstArg();
 
@@ -131,7 +119,9 @@ class TestMtw extends MtwUnitTestCase {
 		Functions\expect( 'get_the_post_thumbnail' )->times( 2 )->andReturn( 'Thumbnail 1', 'Thumbnail 2' );
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
-		Functions\expect( 'has_filter' )->times( 2 )->with( 'mtw_widget_output_filter' )->andReturnTrue();
+		Functions\expect( 'has_filter' )->once()->with( 'mtw_widget_output_filter' )->andReturnTrue();
+		Functions\expect( 'wp_kses_post' )->times( 8 )->andReturnFirstArg();
+		Functions\expect( 'wp_list_pluck' )->once()->andReturn( array( 1 => 2 ) );
 
 		Filters\expectApplied( 'mtw_widget_output_filter' )->times( 2 )->andReturn( 'Test A', 'Test B' );
 

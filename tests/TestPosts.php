@@ -62,6 +62,7 @@ class TestPosts extends MtwUnitTestCase {
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
 		Functions\expect( 'esc_url' )->times( 2 )->andReturnFirstArg();
+		Functions\expect( 'wp_list_pluck' )->once()->andReturn( array( 1 => 2 ) );
 
 		$expected = '<ul><li> <a href="test-1">Test 1</a></li><li> <a href="test-2">Test 2</a></li></ul>';
 
@@ -98,6 +99,7 @@ class TestPosts extends MtwUnitTestCase {
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
 		Functions\expect( 'has_filter' )->times( 2 )->with( 'mtw_shortcode_output_filter' )->andReturnTrue();
+		Functions\expect( 'wp_list_pluck' )->once()->andReturn( array( 1 => 2 ) );
 
 		Filters\expectApplied( 'mtw_shortcode_output_filter' )->times( 2 )->andReturn( 'Test A', 'Test B' );
 
@@ -122,6 +124,7 @@ class TestPosts extends MtwUnitTestCase {
 		Functions\expect( 'get_sites' )->once()->andReturn( $sites );
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
+		Functions\expect( 'wp_list_pluck' )->once()->andReturn( array( 1 => 2 ) );
 
 		$expected = 'No posts found';
 
