@@ -19,4 +19,4 @@ jobs:
       - name: Run plugin check
         uses: wordpress/plugin-check-action@v1
         with:
-          build-dir: './multiisite-taxonomy-widget'
+          build-dir: './multisite-taxonomy-widget'
