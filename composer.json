@@ -28,6 +28,10 @@
   "scripts": {
     "test": "phpunit",
     "coverage": "php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-html tests/coverage",
+    "git-release": "bin/git-release.sh",
+    "build": [
+      "@git-release"
+    ],
     "githooks": [
       "if [ -e ./githooks/pre-commit ]; then cp ./githooks/pre-commit ./.git/hooks/; fi",
       "if [ -e ./.git/hooks/pre-commit ]; then chmod 0755 ./.git/hooks/pre-commit; fi"
