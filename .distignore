@@ -1,12 +1,17 @@
 /.git
 /.github
+/.idea
+/.scrutinizer.yml
+/bin
 /githooks
 /tests
+/multisite-taxonomy-widget
 .distignore
 .gitattributes
 .gitignore
 README.md
 composer.json
 composer.lock
+multisite-taxonomy-widget.zip
 phpcs.xml
 phpunit.xml

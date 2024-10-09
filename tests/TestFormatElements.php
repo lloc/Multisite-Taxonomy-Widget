@@ -21,8 +21,6 @@ class TestFormatElements extends MtwUnitTestCase {
 			'after_title'     => '',
 		);
 
-		Functions\expect( 'wp_kses_post' )->times( 9 )->andReturnFirstArg();
-
 		Filters\expectApplied( 'mtw_formatelements_output_filter' )->once()->andReturnFirstArg();
 
 		$test = new FormatElements( array( 'test' => 'abc' ) );

@@ -5,3 +5,5 @@ composer.lock
 vendor/
 docs/
 tests/coverage/
+multisite-taxonomy-widget/
+multisite-taxonomy-widget.zip

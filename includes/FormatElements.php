@@ -44,8 +44,6 @@ class FormatElements {
 	 * @return array
 	 */
 	public function get() {
-		$args = apply_filters( 'mtw_formatelements_output_filter', $this->args );
-
-		return array_map( 'wp_kses_post', $args );
+		return apply_filters( 'mtw_formatelements_output_filter', $this->args );
 	}
 }
