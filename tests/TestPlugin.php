@@ -8,41 +8,42 @@ use lloc\Mtw\Posts;
 
 class TestPlugin extends MtwUnitTestCase {
 
-	/**
-	 * @doesNotPerformAssertions
-	 */
-	public function test_load() {
+	protected function setUp(): void {
+		$this->test = new Plugin( '/path/to/plugin' );
+	}
+
+	public function test_load(): void {
 		Functions\expect( 'add_action' )
 			->once()
-			->with( 'plugins_loaded', array( Plugin::class, 'init_i18n_support' ) );
+			->with( 'plugins_loaded', array( $this->test, 'init_i18n_support' ) );
 
 		Functions\expect( 'add_action' )
 			->once()
-			->with( 'widgets_init', array( Plugin::class, 'register_widget' ) );
+			->with( 'widgets_init', array( $this->test, 'register_widget' ) );
 
 		Functions\expect( 'add_shortcode' )
 			->once()
 			->with( 'mtw_posts', array( Posts::class, 'create_shortcode' ) );
 
-		Plugin::init();
+		$this->expectNotToPerformAssertions();
+
+		$this->test->hooks();
 	}
 
-	/**
-	 * @doesNotPerformAssertions
-	 */
-	public function test_init_i18n_support() {
-		Functions\expect( 'mtw_get_path' )->once()->andReturn( '/path/to/plugin' );
+	public function test_init_i18n_support(): void {
+		Functions\expect( 'plugin_basename' )->once()->andReturnFirstArg();
 		Functions\expect( 'load_plugin_textdomain' )->once();
 
-		Plugin::init_i18n_support();
+		$this->expectNotToPerformAssertions();
+
+		$this->test->init_i18n_support();
 	}
 
-	/**
-	 * @doesNotPerformAssertions
-	 */
-	public function test_register_widget() {
+	public function test_register_widget(): void {
 		Functions\expect( 'register_widget' )->once();
 
-		Plugin::register_widget();
+		$this->expectNotToPerformAssertions();
+
+		$this->test->register_widget();
 	}
 }

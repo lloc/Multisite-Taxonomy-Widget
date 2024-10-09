@@ -1,11 +1,11 @@
-<?php
+<?php declare( strict_types=1 );
 
 namespace lloc\MtwTests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
 use lloc\Mtw\Posts;
-use Mockery\Mock;
 
 class TestPosts extends MtwUnitTestCase {
 
@@ -17,9 +17,7 @@ class TestPosts extends MtwUnitTestCase {
 		);
 	}
 
-	/**
-	 * @dataProvider get_data
-	 */
+	#[DataProvider( 'get_data' )]
 	public function test_compare_posts( $one, $two, $expected ) {
 		$test = new Posts();
 

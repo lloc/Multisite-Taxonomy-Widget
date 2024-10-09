@@ -93,9 +93,9 @@ class Mtw extends \WP_Widget {
 	 * @return array
 	 */
 	public function update( $new_instance, $instance ) {
-		$instance['title']    = strip_tags( $new_instance['title'] ?? '' );
-		$instance['taxonomy'] = strip_tags( $new_instance['taxonomy'] ?? '' );
-		$instance['name']     = strip_tags( $new_instance['name'] ?? '' );
+		$instance['title']    = wp_strip_all_tags( $new_instance['title'] ?? '' );
+		$instance['taxonomy'] = wp_strip_all_tags( $new_instance['taxonomy'] ?? '' );
+		$instance['name']     = wp_strip_all_tags( $new_instance['name'] ?? '' );
 
 		$temp              = intval( $new_instance['limit'] ?? 0 );
 		$instance['limit'] = ( $temp > 0 || - 1 == $temp ? $temp : self::DEFAULT_LIMIT );
@@ -174,26 +174,7 @@ class Mtw extends \WP_Widget {
 			intval( $params['thumbnail'] )
 		);
 
-		$allowed_html = array(
-			'p'      => array(),
-			'label'  => array(),
-			'input'  => array(
-				'class' => array(),
-				'id'    => array(),
-				'name'  => array(),
-				'type'  => array(),
-				'value' => array(),
-			),
-			'select' => array(
-				'class' => array(),
-				'id'    => array(),
-				'name'  => array(),
-			),
-			'option' => array(
-				'value'    => array(),
-				'selected' => array(),
-			),
-		);
+		$allowed_html = ( new InputElements( wp_kses_allowed_html( 'post' ) ) )->get();
 
 		echo wp_kses( implode( '', $content ), $allowed_html );
 

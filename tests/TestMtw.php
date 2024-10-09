@@ -30,6 +30,7 @@ class TestMtw extends MtwUnitTestCase {
 
 		Functions\expect( 'selected' )->atLeast()->once()->andReturn( 'selected="selected"', '' );
 		Functions\expect( 'get_taxonomies' )->once()->andReturn( $taxonomies );
+		Functions\expect( 'wp_kses_allowed_html' )->once()->andReturn( array( 'p' ) );
 		Functions\expect( 'wp_kses' )->once()->andReturnFirstArg();
 
 		$this->expectOutputString( '<p><label for="title">Title:</label> <input class="widefat" id="title" name="title" type="text" value="" /></p><p><label for="taxonomy">Taxonomy:</label> <select class="widefat" id="taxonomy" name="taxonomy"><option value="category" selected="selected">Category</option><option value="tag" >Tag</option></select></p><p><label for="name">Name:</label> <input class="widefat" id="name" name="name" type="text" value="" /></p><p><label for="limit">Limit:</label> <input class="widefat" id="limit" name="limit" type="text" value="10" /></p><p><label for="thumbnail">Thumbnail:</label> <input class="widefat" id="thumbnail" name="thumbnail" type="text" value="0" /></p>' );
@@ -38,6 +39,8 @@ class TestMtw extends MtwUnitTestCase {
 	}
 
 	public function test_update() {
+		Functions\expect( 'wp_strip_all_tags' )->times( 3 )->andReturnFirstArg();
+
 		$expected = array(
 			'title'     => '',
 			'taxonomy'  => '',
@@ -45,6 +48,7 @@ class TestMtw extends MtwUnitTestCase {
 			'limit'     => 10,
 			'thumbnail' => 0,
 		);
+
 		$this->assertEquals( $expected, $this->test->update( array(), array() ) );
 	}
 
@@ -78,7 +82,7 @@ class TestMtw extends MtwUnitTestCase {
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
 		Functions\expect( 'esc_url' )->times( 4 )->andReturnFirstArg();
-		Functions\expect( 'wp_kses_post' )->times( 9 )->andReturnFirstArg();
+		Functions\expect( 'wp_kses_post' )->once()->andReturnFirstArg();
 		Functions\expect( 'wp_list_pluck' )->once()->andReturn( array( 1 => 2 ) );
 
 		Filters\expectApplied( 'widget_title' )->once()->andReturnFirstArg();
@@ -124,7 +128,7 @@ class TestMtw extends MtwUnitTestCase {
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
 		Functions\expect( 'has_filter' )->once()->with( 'mtw_widget_output_filter' )->andReturnTrue();
-		Functions\expect( 'wp_kses_post' )->times( 9 )->andReturnFirstArg();
+		Functions\expect( 'wp_kses_post' )->once()->andReturnFirstArg();
 		Functions\expect( 'wp_list_pluck' )->once()->andReturn( array( 1 => 2 ) );
 
 		Filters\expectApplied( 'mtw_widget_output_filter' )->times( 2 )->andReturn( 'Test A', 'Test B' );

@@ -1,9 +1,15 @@
 <?php
 /**
+ * Multisite Taxonomy Widget
+ *
+ * @copyright Copyright (C) 2011-2022, Dennis Ploetner, re@lloc.de
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2 or later
+ * @wordpress-plugin
+ *
  * Plugin Name: Multisite Taxonomy Widget
- * Plugin URI: https://github.com/lloc/Multisite-Taxonomy-Widget
+ * Plugin URI: https://wordpress.org/plugins/multisite-taxonomy-widget/
  * Description: List the latest posts of a specific taxonomy from your blog-network.
- * Version: 1.2.2
+ * Version: 1.3.0
  * Author: Dennis Ploetner
  * Author URI: http://lloc.de/
  * Text Domain: multisite-taxonomy-widget
@@ -28,13 +34,4 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
 }
 
-/**
- * Gets path of the plugin
- *
- * @return string
- */
-function mtw_get_path() {
-	return plugin_basename( __FILE__ );
-}
-
-\lloc\Mtw\Plugin::init();
+( new \lloc\Mtw\Plugin( __FILE__ ) )->hooks();
