@@ -14,8 +14,9 @@ class MtwUnitTestCase extends TestCase {
 		parent::setUp();
 		Monkey\setUp();
 
+		Functions\when( 'esc_attr' )->returnArg();
 		Functions\when( 'sanitize_title' )->returnArg();
-		Functions\when( '__' )->returnArg();
+		Functions\when( 'esc_html__' )->returnArg();
 	}
 
 	protected function tearDown(): void {
