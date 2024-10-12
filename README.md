@@ -3,6 +3,8 @@ Multisite Taxonomy Widget
 
 Display a **recent posts**-widget of all your posts in your blog-network which have a specific tag, category or any other built-in or custom taxonomy.
 
+[![codecov](https://codecov.io/gh/lloc/Multisite-Taxonomy-Widget/graph/badge.svg?token=829HP64ZBZ)](https://codecov.io/gh/lloc/Multisite-Taxonomy-Widget)
+
 _Please keep in mind that the version of the Multisite Taxonomy Widget at GitHub is a work in progress._
 
 **Download the [latest stable version from the WordPress Plugin Directory](http://downloads.wordpress.org/plugin/multisite-taxonomy-widget.zip).**
