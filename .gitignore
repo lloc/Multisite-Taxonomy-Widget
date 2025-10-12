@@ -1,9 +1,10 @@
 .idea/
 .phpunit.cache/
+.phpcs.cache
 .phpunit.result.cache
 composer.lock
-vendor/
 docs/
-tests/coverage/
-multisite-taxonomy-widget/
 multisite-taxonomy-widget.zip
+multisite-taxonomy-widget/
+tests/coverage/
+vendor/

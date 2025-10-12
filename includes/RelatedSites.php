@@ -11,8 +11,18 @@ class RelatedSites {
 		'deleted'  => 0,
 	);
 
+	/**
+	 * Network ID
+	 *
+	 * @var int $network_id
+	 */
 	protected int $network_id;
 
+	/**
+	 * Current Site ID
+	 *
+	 * @var int $current_site
+	 */
 	protected int $current_site;
 
 	public function __construct( int $network_id, int $current_site ) {
@@ -25,7 +35,7 @@ class RelatedSites {
 		$sites = array_filter(
 			get_sites( $args ),
 			function ( $site ) {
-				return $this->current_site != $site->blog_id;
+				return $this->current_site !== $site->blog_id;
 			}
 		);
 

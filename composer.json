@@ -9,10 +9,11 @@
     "composer/installers": "~1.9.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^10.0",
     "brain/monkey": "^2.6",
-    "squizlabs/php_codesniffer": "^3.9",
-    "phpcompatibility/php-compatibility": "^9.3",
+    "phpstan/extension-installer": "^1.1",
+    "phpstan/phpstan": "^1.8",
+    "phpunit/phpunit": "^10.0",
+    "szepeviktor/phpstan-wordpress": "^1.1",
     "wp-coding-standards/wpcs": "^3.0"
   },
   "autoload": {
@@ -27,13 +28,14 @@
   },
   "scripts": {
     "test": "phpunit",
+    "phpstan": "vendor/bin/phpstan analyze --memory-limit=1G",
     "coverage": "php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-html tests/coverage",
     "git-release": "bin/git-release.sh",
     "build": [
       "@git-release"
     ],
     "githooks": [
-      "if [ -e ./githooks/pre-commit ]; then cp ./githooks/pre-commit ./.git/hooks/; fi",
+      "if [ -e ./bin/githooks/pre-commit ]; then cp ./bin/githooks/pre-commit ./.git/hooks/; fi",
       "if [ -e ./.git/hooks/pre-commit ]; then chmod 0755 ./.git/hooks/pre-commit; fi"
     ],
     "post-install-cmd": [
@@ -60,7 +62,8 @@
   "config": {
     "allow-plugins": {
       "composer/installers": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpstan/extension-installer": true
     }
   }
 }

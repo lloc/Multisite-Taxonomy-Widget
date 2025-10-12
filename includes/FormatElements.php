@@ -15,6 +15,9 @@ class FormatElements {
 		'after_mtw_item'  => '</li>',
 	);
 
+	/**
+	 * @var array
+	 */
 	protected array $args;
 
 	public function __construct( array $args ) {
@@ -24,26 +27,9 @@ class FormatElements {
 	/**
 	 * Get formatelements
 	 *
-	 * You can use code like this if you want to override the output of the
-	 * function:
-	 * <code>
-	 * function my_get_formatelements( $args ) {
-	 *     $args['before_mtw_list'] = '<div>';
-	 *     $args['after_mtw_list']  = '</div>';
-	 *     $args['before_mtw_item'] = '<p>';
-	 *     $args['after_mtw_item']  = '</p>';
-	 *     return $args;
-	 * }
-	 * add_filter( 'mtw_formatelements_output_filter', 'my_get_formatelements' );
-	 * </code>
-	 *
-	 * @package Mtw
-	 *
-	 * @param array $args
-	 *
 	 * @return array
 	 */
-	public function get() {
+	public function get(): array {
 		return apply_filters( 'mtw_formatelements_output_filter', $this->args );
 	}
 }

@@ -92,16 +92,16 @@ class Mtw extends \WP_Widget {
 	 *
 	 * @return array
 	 */
-	public function update( $new_instance, $instance ) {
+	public function update( $new_instance, $old_instance ) {
 		$instance['title']    = wp_strip_all_tags( $new_instance['title'] ?? '' );
 		$instance['taxonomy'] = wp_strip_all_tags( $new_instance['taxonomy'] ?? '' );
 		$instance['name']     = wp_strip_all_tags( $new_instance['name'] ?? '' );
 
 		$temp              = intval( $new_instance['limit'] ?? 0 );
-		$instance['limit'] = ( $temp > 0 || - 1 == $temp ? $temp : self::DEFAULT_LIMIT );
+		$instance['limit'] = ( $temp > 0 || - 1 === $temp ? $temp : self::DEFAULT_LIMIT );
 
 		$temp                  = intval( $new_instance['thumbnail'] ?? 0 );
-		$instance['thumbnail'] = ( 0 <= $temp ? $temp : 0 );
+		$instance['thumbnail'] = ( $temp > 0 ? $temp : 0 );
 
 		return $instance;
 	}
@@ -119,7 +119,7 @@ class Mtw extends \WP_Widget {
 			'taxonomy'  => $instance['taxonomy'] ?? '',
 			'name'      => $instance['name'] ?? '',
 			'limit'     => $instance['limit'] ?? self::DEFAULT_LIMIT,
-			'thumbnail' => $instanceq['thumbnail'] ?? 0,
+			'thumbnail' => $instance['thumbnail'] ?? 0,
 		);
 
 		$content = array(
