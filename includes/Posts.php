@@ -12,29 +12,8 @@ class Posts {
 	/**
 	 * Get thumbnail
 	 *
-	 * You can use code like this if you want to override the output of the
-	 * function:
-	 *
-	 * <code>
-	 * function my_get_thumbnail( WP_Post $post, array $atts, ?string $default = null ) {
-	 *     if ( ! empty( $atts['thumbnail'] ) ) {
-	 *         return sprintf(
-	 *             '<a href="%s" title="%s">%s</a>',
-	 *             $post->mtw_href,
-	 *             apply_filters( 'the_title', $post->post_title ),
-	 *             $post->mtw_thumb
-	 *         );
-	 *     }
-	 *     return $default
-	 * }
-	 * add_filter( 'mtw_thumbnail_output_filter', 'my_get_thumbnail', 10, 3 );
-	 * </code>
-	 *
-	 * @package Mtw
-	 *
 	 * @param \WP_Post $post
 	 * @param array    $atts
-	 * @param ?string  $default
 	 *
 	 * @return string
 	 */
@@ -52,20 +31,6 @@ class Posts {
 
 	/**
 	 * Create shortcode
-	 *
-	 * You can use code like this if you want to override the output of the
-	 * function:
-	 *
-	 * <code>
-	 * function my_create_shortcode( WP_Post $post, array $atts ) {
-	 *     return sprintf(
-	 *         '<a href="%1$s" title="%2$s">%2$s</a>',
-	 *         $post->mtw_href,
-	 *         apply_filters( 'the_title', $post->post_title )
-	 *     );
-	 * }
-	 * add_filter( 'mtw_shortcode_output_filter', 'my_create_shortcode' );
-	 * </code>
 	 *
 	 * @param array $atts
 	 *

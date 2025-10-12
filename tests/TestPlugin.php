@@ -15,10 +15,6 @@ class TestPlugin extends MtwUnitTestCase {
 	public function test_load(): void {
 		Functions\expect( 'add_action' )
 			->once()
-			->with( 'plugins_loaded', array( $this->test, 'init_i18n_support' ) );
-
-		Functions\expect( 'add_action' )
-			->once()
 			->with( 'widgets_init', array( $this->test, 'register_widget' ) );
 
 		Functions\expect( 'add_shortcode' )
@@ -28,15 +24,6 @@ class TestPlugin extends MtwUnitTestCase {
 		$this->expectNotToPerformAssertions();
 
 		$this->test->hooks();
-	}
-
-	public function test_init_i18n_support(): void {
-		Functions\expect( 'plugin_basename' )->once()->andReturnFirstArg();
-		Functions\expect( 'load_plugin_textdomain' )->once();
-
-		$this->expectNotToPerformAssertions();
-
-		$this->test->init_i18n_support();
 	}
 
 	public function test_register_widget(): void {

@@ -5,6 +5,7 @@
  * @copyright Copyright (C) 2011-2022, Dennis Ploetner, re@lloc.de
  * @license http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2 or later
  * @wordpress-plugin
+ * @package multisite-taxonomy-widget
  *
  * Plugin Name: Multisite Taxonomy Widget
  * Plugin URI: https://wordpress.org/plugins/multisite-taxonomy-widget/

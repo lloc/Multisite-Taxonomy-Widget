@@ -24,6 +24,11 @@ class InputElements {
 		),
 	);
 
+	/**
+	 * Args for input elements
+	 *
+	 * @var array
+	 */
 	protected array $args;
 
 	public function __construct( array $args = array() ) {
@@ -31,7 +36,7 @@ class InputElements {
 	}
 
 	/**
-	 * @return mixed array
+	 * @return array
 	 */
 	public function get(): array {
 		return apply_filters( 'mtw_inputelements_output_filter', $this->args );
