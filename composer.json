@@ -14,7 +14,8 @@
     "phpstan/phpstan": "^1.8",
     "phpunit/phpunit": "^10.0",
     "szepeviktor/phpstan-wordpress": "^1.1",
-    "wp-coding-standards/wpcs": "^3.0"
+    "wp-coding-standards/wpcs": "^3.0",
+    "lloc/composer-i18n-scripts": "^1.0"
   },
   "autoload": {
     "psr-4": {
@@ -32,6 +33,7 @@
     "coverage": "php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-html tests/coverage",
     "git-release": "bin/git-release.sh",
     "build": [
+      "@composer update --no-dev",
       "@git-release"
     ],
     "githooks": [
@@ -63,7 +65,8 @@
     "allow-plugins": {
       "composer/installers": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
-      "phpstan/extension-installer": true
+      "phpstan/extension-installer": true,
+      "lloc/composer-i18n-scripts": true
     }
   }
 }

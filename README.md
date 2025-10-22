@@ -1,85 +1,77 @@
-Multisite Taxonomy Widget
-=========================
+# Multisite Taxonomy Widget
 
 Display a **recent posts**-widget of all your posts in your blog-network which have a specific tag, category or any other built-in or custom taxonomy.
 
 [![codecov](https://codecov.io/gh/lloc/Multisite-Taxonomy-Widget/graph/badge.svg?token=829HP64ZBZ)](https://codecov.io/gh/lloc/Multisite-Taxonomy-Widget)
 
-_Please keep in mind that the version of the Multisite Taxonomy Widget at GitHub is a work in progress._
+This plugin surfaces network-wide content so site owners can highlight related posts across a WordPress multisite. It ships with a configurable widget, a flexible shortcode, and helper filters for fine-grained control.
+
+_Please keep in mind that the version of the Multisite Taxonomy Widget on GitHub is a work in progress._
 
 **Download the [latest stable version from the WordPress Plugin Directory](http://downloads.wordpress.org/plugin/multisite-taxonomy-widget.zip).**
 
 Need help? Check out the [forum](http://wordpress.org/support/plugin/multisite-taxonomy-widget) first! If you find any bugs then I would very much like to [hear about the issue](https://github.com/lloc/Multisite-Taxonomy-Widget/issues).
 
-How to use the widget
----------------------
+## Features
 
-After the activation of the plugin you'll find a new widget called Multisite Taxonomy in _Appearance > Widgets_ (/wp-admin/widgets.php).
+- Query posts across your multisite network by taxonomy (core or custom) with an adjustable limit.
+- Expose the content via a widget or shortcode, each supporting thumbnails and custom markup.
+- Extend behaviour through WordPress-style filters without touching core plugin code.
 
-Once you dragged the widget in one of your sidebars you can fill in various parameters for customizing the output of the widget:
+## Installation
 
-1.  **Title**
+1. Download the zip from the WordPress directory or clone this repository.
+2. Install it into your `wp-content/plugins/` directory and activate it network-wide.
+3. Configure the widget or shortcode as described below.
 
-	This is the widget title. Leave it empty if you don't need to show a title above the widget.
+## Usage
 
-2.  **Taxonomy**
+### Widget
 
-	This is the type of the taxonomy such as category, tag and so on.
+After activation you will find **Multisite Taxonomy** in _Appearance ▸ Widgets_ (`/wp-admin/widgets.php`).
 
-3.  **Name**
+- Drag the widget into any sidebar.
+- Configure the available fields:
+  - **Title** — optional heading for the widget output.
+  - **Taxonomy** — taxonomy slug (e.g. `category`, `post_tag`, `product_category`).
+  - **Name** — the term slug to query against (`cool-post` when the term name is _Cool post_).
+  - **Limit** — maximum number of posts; set to `-1` to show all (not recommended for large sites).
+  - **Thumbnail** — positive pixel width to include thumbnails, or `0`/empty to hide them.
 
-	This is the most important parameter. If you want the widget to search for all posts with the tag _Cool post_ for example put _cool-post_ in here because the plugin uses the slug-form of the taxonomies and the slug of the _Cool post_-taxonomy is probably saved as _cool-post_. But you should check that anyway.
+### Shortcode
 
-4.  **Limit**
+Use the `[mtw_posts]` shortcode anywhere shortcodes are supported. Parameters mirror the widget settings.
 
-	You can limit the output with this parameter. This should be a number > 0. If you want to show all posts of the specific taxonomy you can set -1 but it is not recommended. 
+```text
+[mtw_posts taxonomy="category" name="test"]
 
-5.  **Thumbnail**
+[mtw_posts taxonomy="post_tag" name="featured" thumbnail="0"]
 
-	You can set any positive number here if you want to show thumbnails. If you don't like them leave this field empty or fill in a 0.
+[mtw_posts taxonomy="product_category" name="test" limit="5"]
+```
 
-How to use the shortcode
-------------------------
+## Filters and Extensibility
 
-Use the shortcode _[mtw_posts]_ if you'd like to show a list of posts of your network in the content where usually a normal widget cannot be placed. The parameters are similar to those for the widget. You can use taxonomy, name, limit and thumbnail as arguments.
+Hook Description | Purpose
+---|---
+`mtw_formatelements_output_filter` | Override the list wrappers (`<ul>`, `<li>`).
+`mtw_thumbnail_output_filter` | Customize thumbnail markup with access to the post object and args.
+`mtw_shortcode_output_filter` | Adjust the shortcode list item output.
+`mtw_widget_output_filter` | Adjust the widget list item output.
 
-With this in mind you can write
+## Development
 
-	[mtw_posts taxonomy="category" name="test"]
+```bash
+composer install        # install dependencies
+composer test           # run the PHPUnit suite with Brain Monkey
+composer phpstan        # static analysis using WordPress extensions
+composer coverage       # generate HTML coverage at tests/coverage/
+```
 
-if you want to show the last 10 (because this is standard when limit is not set) posts in the category test. If you prefer tags and you don't want to see thumbnails use:
+Feel free to open pull requests; see `AGENTS.md` for the full contributor guide.
 
-	[mtw_posts taxonomy="post_tag" name="test" thumbnail="0"]
+## Support
 
-And if you want to show the last 5 posts of a post type which has a custom taxonomy called product_category, you could use something like:
+Visit the [support forum](http://wordpress.org/support/plugin/multisite-taxonomy-widget) to share questions or ideas. Bug reports are always welcome through [GitHub issues](https://github.com/lloc/Multisite-Taxonomy-Widget/issues).
 
-	[mtw_posts taxonomy="product_category" name="test" limit="5"]
-
-How to use the filter hooks
----------------------------
-
-You can use filters if you want to override the output of the functions. The are 4 filters available:
-
-1.  **mtw_formatelements_output_filter**
-
-	There is a function which calls this filter after adding 4 elements to an array of format-elements: before_mtw_list/after_mtw_list (`<ul>/</ul>`) and before_mtw_item/after_mtw_item (`<li>/</li>`) so you can override this.
-
-	[See also](http://lloc.github.com/Multisite-Taxonomy-Widget/function-mtw_get_formatelements.html)
-
-2.  **mtw_thumbnail_output_filter**
-
-	You can create your customized output of the thumbnail. This filter gives you access to a post-object and an array of parameters and returns the string from your function if you define one.
-
-	[See also](http://lloc.github.com/Multisite-Taxonomy-Widget/function-mtw_get_thumbnail.html)
-
-3.  **mtw_shortcode_output_filter**
-
-	You can create your customized output of the list-item when a shortcode is used. This filter gives you access to a post-object and an array of parameters and returns the string from your function if you define one.
-
-	[See also](http://lloc.github.com/Multisite-Taxonomy-Widget/function-mtw_create_shortcode.html)
-
-4.  **mtw_widget_output_filter**
-
-	You can create your customized output of the list-item when a widget is used. This filter gives you access to a post-object and an array of parameters and returns the string from your function if you define one.
-
-	[See also](http://lloc.github.com/Multisite-Taxonomy-Widget/class-MultisiteTaxonomyWidget.html)
+Additional usage documentation and API references are available on the [project site](http://lloc.github.com/Multisite-Taxonomy-Widget/).
