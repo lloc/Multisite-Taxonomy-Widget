@@ -34,7 +34,7 @@ After activation you will find **Multisite Taxonomy** in _Appearance ▸ Widgets
 - Configure the available fields:
   - **Title** — optional heading for the widget output.
   - **Taxonomy** — taxonomy slug (e.g. `category`, `post_tag`, `product_category`).
-  - **Name** — the term slug to query against (`cool-post` when the term name is _Cool post_).
+- **Term Slug** — the term slug to query against (`cool-post` when the term name is _Cool post_).
   - **Limit** — maximum number of posts; set to `-1` to show all (not recommended for large sites).
   - **Thumbnail** — positive pixel width to include thumbnails, or `0`/empty to hide them.
 
