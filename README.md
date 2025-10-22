@@ -4,7 +4,7 @@ Display a **recent posts**-widget of all your posts in your blog-network which h
 
 [![codecov](https://codecov.io/gh/lloc/Multisite-Taxonomy-Widget/graph/badge.svg?token=829HP64ZBZ)](https://codecov.io/gh/lloc/Multisite-Taxonomy-Widget)
 
-This plugin surfaces network-wide content so site owners can highlight related posts across a WordPress multisite. It ships with a configurable widget, a flexible shortcode, and helper filters for fine-grained control.
+This plugin enhances WordPress multisites by displaying related posts across the network. It offers a widget, shortcode, and filters for flexible content surfacing.
 
 _Please keep in mind that the version of the Multisite Taxonomy Widget on GitHub is a work in progress._
 
