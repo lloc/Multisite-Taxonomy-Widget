@@ -13,8 +13,8 @@
 /bin
 /multisite-taxonomy-widget
 /tests
+AGENTS.md
 README.md
-composer.json
 composer.lock
 multisite-taxonomy-widget.zip
 phpcs.xml
