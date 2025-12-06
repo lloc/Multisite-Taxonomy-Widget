@@ -4,6 +4,8 @@ namespace lloc\Mtw;
 
 class FormatElements {
 
+	const MTW_FORMATELEMENTS_OUTPUT_FILTER = 'mtw_formatelements_output_filter';
+
 	const PRESET = array(
 		'before_widget'   => '',
 		'after_widget'    => '',
@@ -30,6 +32,6 @@ class FormatElements {
 	 * @return array
 	 */
 	public function get(): array {
-		return apply_filters( 'mtw_formatelements_output_filter', $this->args );
+		return apply_filters( self::MTW_FORMATELEMENTS_OUTPUT_FILTER, $this->args );
 	}
 }

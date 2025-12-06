@@ -4,6 +4,8 @@ namespace lloc\Mtw;
 
 class Post {
 
+	const MTW_THUMBNAIL_OUTPUT_FILTER = 'mtw_thumbnail_output_filter';
+
 	/**
 	 * @var \WP_Post Post object
 	 */
@@ -44,8 +46,8 @@ class Post {
 	 * @return string
 	 */
 	public function get_thumbnail( array $atts ): string {
-		if ( has_filter( 'mtw_thumbnail_output_filter' ) ) {
-			return apply_filters( 'mtw_thumbnail_output_filter', $this, $atts );
+		if ( has_filter( self::MTW_THUMBNAIL_OUTPUT_FILTER ) ) {
+			return apply_filters( self::MTW_THUMBNAIL_OUTPUT_FILTER, $this, $atts );
 		}
 
 		if ( empty( $atts['thumbnail'] ) ) {
@@ -65,7 +67,7 @@ class Post {
 			'%1$s <a href="%2$s">%3$s</a>',
 			$this->get_thumbnail( $atts ),
 			esc_url( $this->permalink ),
-			apply_filters( 'the_title', $this->post->post_title )
+			get_the_title( $this->post )
 		);
 	}
 

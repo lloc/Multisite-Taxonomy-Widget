@@ -9,6 +9,10 @@ namespace lloc\Mtw;
  */
 class Posts {
 
+	const MTW_SHORTCODE_OUTPUT_FILTER = 'mtw_shortcode_output_filter';
+
+	const MTW_POSTS_NO_POSTS_FOUND = 'mtw_posts_no_posts_found';
+
 	/**
 	 * Create shortcode
 	 *
@@ -20,13 +24,13 @@ class Posts {
 		$posts = self::get_posts_from_network( $atts );
 
 		if ( empty( $posts ) ) {
-			return apply_filters( 'mtw_posts_no_posts_found', '' );
+			return apply_filters( self::MTW_POSTS_NO_POSTS_FOUND, '' );
 		}
 
 		$list = array();
 		foreach ( $posts as $post ) {
-			if ( has_filter( 'mtw_shortcode_output_filter' ) ) {
-				$list[] = apply_filters( 'mtw_shortcode_output_filter', $post, $atts );
+			if ( has_filter( self::MTW_SHORTCODE_OUTPUT_FILTER ) ) {
+				$list[] = apply_filters( self::MTW_SHORTCODE_OUTPUT_FILTER, $post, $atts );
 				continue;
 			}
 

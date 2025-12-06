@@ -74,18 +74,17 @@ class TestMtw extends MtwUnitTestCase {
 			(object) array( 'blog_id' => 2 ),
 		);
 
-		Functions\expect( 'get_posts' )->times( 2 )->andReturn( array( $a ), array( $b ) );
+		Functions\expect( 'get_posts' )->twice()->andReturn( array( $a ), array( $b ) );
 		Functions\expect( 'get_sites' )->once()->andReturn( $sites );
-		Functions\expect( 'get_the_time' )->times( 2 )->andReturn( 1234567890 );
-		Functions\expect( 'get_permalink' )->times( 2 )->andReturn( $a->slug, $b->slug );
-		Functions\expect( 'get_the_post_thumbnail' )->times( 2 )->andReturn( 'Thumbnail 1', 'Thumbnail 2' );
+		Functions\expect( 'get_the_time' )->twice()->andReturn( 1234567890 );
+		Functions\expect( 'get_permalink' )->twice()->andReturn( $a->slug, $b->slug );
+		Functions\expect( 'get_the_post_thumbnail' )->twice()->andReturn( 'Thumbnail 1', 'Thumbnail 2' );
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
 		Functions\expect( 'esc_url' )->times( 4 )->andReturnFirstArg();
 		Functions\expect( 'wp_kses_post' )->once()->andReturnFirstArg();
 		Functions\expect( 'wp_list_pluck' )->once()->andReturn( array( 1 => 2 ) );
-
-		Filters\expectApplied( 'widget_title' )->once()->andReturnFirstArg();
+		Functions\expect( 'get_the_title' )->twice()->andReturn( $a->post_title, $b->post_title );
 
 		$this->expectOutputString( 'TEST<ul><li><a href="test-1">Thumbnail 1</a> <a href="test-1">Test 1</a></li><li><a href="test-2">Thumbnail 2</a> <a href="test-2">Test 2</a></li></ul>' );
 
@@ -120,18 +119,18 @@ class TestMtw extends MtwUnitTestCase {
 			(object) array( 'blog_id' => 2 ),
 		);
 
-		Functions\expect( 'get_posts' )->times( 2 )->andReturn( array( $a ), array( $b ) );
+		Functions\expect( 'get_posts' )->twice()->andReturn( array( $a ), array( $b ) );
 		Functions\expect( 'get_sites' )->once()->andReturn( $sites );
-		Functions\expect( 'get_the_time' )->times( 2 )->andReturn( 1234567890 );
-		Functions\expect( 'get_permalink' )->times( 2 )->andReturn( $a->slug, $b->slug );
-		Functions\expect( 'get_the_post_thumbnail' )->times( 2 )->andReturn( 'Thumbnail 1', 'Thumbnail 2' );
+		Functions\expect( 'get_the_time' )->twice()->andReturn( 1234567890 );
+		Functions\expect( 'get_permalink' )->twice()->andReturn( $a->slug, $b->slug );
+		Functions\expect( 'get_the_post_thumbnail' )->twice()->andReturn( 'Thumbnail 1', 'Thumbnail 2' );
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
 		Functions\expect( 'has_filter' )->once()->with( 'mtw_widget_output_filter' )->andReturnTrue();
 		Functions\expect( 'wp_kses_post' )->once()->andReturnFirstArg();
 		Functions\expect( 'wp_list_pluck' )->once()->andReturn( array( 1 => 2 ) );
 
-		Filters\expectApplied( 'mtw_widget_output_filter' )->times( 2 )->andReturn( 'Test A', 'Test B' );
+		Filters\expectApplied( Mtw::MTW_WIDGET_OUTPUT_FILTER )->twice()->andReturn( 'Test A', 'Test B' );
 
 		$this->expectOutputString( 'TEST<ul><li>Test A</li><li>Test B</li></ul>' );
 

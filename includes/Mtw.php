@@ -11,6 +11,8 @@ class Mtw extends \WP_Widget {
 
 	const DEFAULT_LIMIT = 10;
 
+	const MTW_WIDGET_OUTPUT_FILTER = 'mtw_widget_output_filter';
+
 	/**
 	 * Constructor
 	 */
@@ -41,7 +43,7 @@ class Mtw extends \WP_Widget {
 	 *         apply_filters( 'the_title', $post->post_title )
 	 *     );
 	 * }
-	 * add_filter( 'mtw_widget_output_filter', 'my_widget_output' );
+	 * add_filter( self::WIDGET_OUTPUT_FILTER, 'my_widget_output' );
 	 * </code>
 	 *
 	 * @param array $args
@@ -60,7 +62,7 @@ class Mtw extends \WP_Widget {
 		}
 
 		$posts  = Posts::get_posts_from_network( $instance );
-		$filter = has_filter( 'mtw_widget_output_filter' );
+		$filter = has_filter( self::MTW_WIDGET_OUTPUT_FILTER );
 		if ( $posts ) {
 			$content[] = $args['before_mtw_list'];
 
@@ -68,7 +70,7 @@ class Mtw extends \WP_Widget {
 				$content[] = $args['before_mtw_item'];
 
 				if ( $filter ) {
-					$content[] = apply_filters( 'mtw_widget_output_filter', $post, $instance );
+					$content[] = apply_filters( self::MTW_WIDGET_OUTPUT_FILTER, $post, $instance );
 				} else {
 					$content[] = $post->build_link( $instance );
 				}

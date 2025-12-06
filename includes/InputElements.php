@@ -4,6 +4,8 @@ namespace lloc\Mtw;
 
 class InputElements {
 
+	const MTW_INPUTELEMENTS_OUTPUT_FILTER = 'mtw_inputelements_output_filter';
+
 	const PRESET = array(
 		'label'  => array(),
 		'input'  => array(
@@ -39,6 +41,6 @@ class InputElements {
 	 * @return array
 	 */
 	public function get(): array {
-		return apply_filters( 'mtw_inputelements_output_filter', $this->args );
+		return apply_filters( self::MTW_INPUTELEMENTS_OUTPUT_FILTER, $this->args );
 	}
 }

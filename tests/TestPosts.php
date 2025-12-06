@@ -55,15 +55,16 @@ class TestPosts extends MtwUnitTestCase {
 			(object) array( 'blog_id' => 2 ),
 		);
 
-		Functions\expect( 'get_posts' )->times( 2 )->andReturn( array( $a ), array( $b ) );
-		Functions\expect( 'get_the_time' )->times( 2 )->andReturn( 1234567890 );
-		Functions\expect( 'get_permalink' )->times( 2 )->andReturn( $a->slug, $b->slug );
-		Functions\expect( 'get_the_post_thumbnail' )->times( 2 )->andReturn( 'Thumbnail 1', 'Thumbnail 2' );
+		Functions\expect( 'get_posts' )->twice()->andReturn( array( $a ), array( $b ) );
+		Functions\expect( 'get_the_time' )->twice()->andReturn( 1234567890 );
+		Functions\expect( 'get_permalink' )->twice()->andReturn( $a->slug, $b->slug );
+		Functions\expect( 'get_the_post_thumbnail' )->twice()->andReturn( 'Thumbnail 1', 'Thumbnail 2' );
 		Functions\expect( 'get_sites' )->once()->andReturn( $sites );
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
-		Functions\expect( 'esc_url' )->times( 2 )->andReturnFirstArg();
+		Functions\expect( 'esc_url' )->twice()->andReturnFirstArg();
 		Functions\expect( 'wp_list_pluck' )->once()->andReturn( array( 1 => 2 ) );
+		Functions\expect( 'get_the_title' )->twice()->andReturn( $a->post_title, $b->post_title );
 
 		$expected = '<ul><li> <a href="test-1">Test 1</a></li><li> <a href="test-2">Test 2</a></li></ul>';
 
@@ -92,17 +93,17 @@ class TestPosts extends MtwUnitTestCase {
 			(object) array( 'blog_id' => 2 ),
 		);
 
-		Functions\expect( 'get_posts' )->times( 2 )->andReturn( array( $a ), array( $b ) );
-		Functions\expect( 'get_the_time' )->times( 2 )->andReturn( 1234567890 );
-		Functions\expect( 'get_permalink' )->times( 2 )->andReturn( $a->slug, $b->slug );
-		Functions\expect( 'get_the_post_thumbnail' )->times( 2 )->andReturn( 'Thumbnail 1', 'Thumbnail 2' );
+		Functions\expect( 'get_posts' )->twice()->andReturn( array( $a ), array( $b ) );
+		Functions\expect( 'get_the_time' )->twice()->andReturn( 1234567890 );
+		Functions\expect( 'get_permalink' )->twice()->andReturn( $a->slug, $b->slug );
+		Functions\expect( 'get_the_post_thumbnail' )->twice()->andReturn( 'Thumbnail 1', 'Thumbnail 2' );
 		Functions\expect( 'get_sites' )->once()->andReturn( $sites );
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
-		Functions\expect( 'has_filter' )->times( 2 )->with( 'mtw_shortcode_output_filter' )->andReturnTrue();
+		Functions\expect( 'has_filter' )->twice()->with( 'mtw_shortcode_output_filter' )->andReturnTrue();
 		Functions\expect( 'wp_list_pluck' )->once()->andReturn( array( 1 => 2 ) );
 
-		Filters\expectApplied( 'mtw_shortcode_output_filter' )->times( 2 )->andReturn( 'Test A', 'Test B' );
+		Filters\expectApplied( Posts::MTW_SHORTCODE_OUTPUT_FILTER )->twice()->andReturn( 'Test A', 'Test B' );
 
 		$expected = '<ul><li>Test A</li><li>Test B</li></ul>';
 
@@ -121,7 +122,7 @@ class TestPosts extends MtwUnitTestCase {
 			(object) array( 'blog_id' => 2 ),
 		);
 
-		Functions\expect( 'get_posts' )->times( 2 )->andReturn( array() );
+		Functions\expect( 'get_posts' )->twice()->andReturn( array() );
 		Functions\expect( 'get_sites' )->once()->andReturn( $sites );
 		Functions\expect( 'switch_to_blog' )->once();
 		Functions\expect( 'restore_current_blog' )->once();
@@ -129,7 +130,7 @@ class TestPosts extends MtwUnitTestCase {
 
 		$expected = 'No posts found';
 
-		Filters\expectApplied( 'mtw_posts_no_posts_found' )->once()->andReturn( $expected );
+		Filters\expectApplied( Posts::MTW_POSTS_NO_POSTS_FOUND )->once()->andReturn( $expected );
 
 		$this->assertEquals( $expected, ( new Posts() )->create_shortcode( array() ) );
 	}
@@ -146,7 +147,7 @@ class TestPosts extends MtwUnitTestCase {
 
 		Functions\expect( 'has_filter' )->once()->with( 'mtw_thumbnail_output_filter' )->andReturnTrue();
 
-		Filters\expectApplied( 'mtw_thumbnail_output_filter' )->once()->andReturn( 'Test' );
+		Filters\expectApplied( Post::MTW_THUMBNAIL_OUTPUT_FILTER )->once()->andReturn( 'Test' );
 
 		$this->assertEquals( 'Test', $post->get_thumbnail( array() ) );
 	}
