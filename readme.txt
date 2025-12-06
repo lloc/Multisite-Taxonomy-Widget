@@ -26,10 +26,9 @@ There is an [introduction](https://github.com/lloc/Multisite-Taxonomy-Widget#mul
 
 == Changelog ==
 
-= 1.3.0 =
+= 1.3.1 =
 * Tested with latest WordPress version
-* Plugin check added
-* Escaping of input and output enforced
+* Plugin Check compliance
 
 = 1.2.1 =
 * Tested with latest WordPress version
@@ -45,13 +44,6 @@ There is an [introduction](https://github.com/lloc/Multisite-Taxonomy-Widget#mul
 * subsitition of wp_get_sites with get_sites
 * minimum is now WordPress 4.6
 * array notation
-
-= 1.0 =
-* tagged as stable
-* WordPress Coding Standards
-
-= 0.8 =
-* Bugfix: Strict standards and PHPDocs
 
 [...]
 
