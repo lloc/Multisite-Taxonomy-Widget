@@ -33,8 +33,8 @@ class Post {
 	public function __construct( \WP_Post $post, $ts_size = 'thumbnail' ) {
 		$this->post = $post;
 
-		$this->timestamp = get_the_time( 'U', $post->ID );
-		$this->permalink = get_permalink( $post->ID );
+		$this->timestamp = get_the_time( 'U', $post->ID ) ?: 0;
+		$this->permalink = get_permalink( $post->ID ) ?: '';
 		$this->thumbnail = get_the_post_thumbnail( $post->ID, $ts_size );
 	}
 
