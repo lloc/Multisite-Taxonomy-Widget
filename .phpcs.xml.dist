@@ -3,9 +3,7 @@
     <description>PHPCS Multisite Taxonomy Widget configuration</description>
     <config name="testVersion" value="7.4-"/>
     <exclude-pattern>bin/*</exclude-pattern>
-    <exclude-pattern>tests/*</exclude-pattern>
     <exclude-pattern>vendor/*</exclude-pattern>
-    <exclude-pattern>phpstan.neon</exclude-pattern>
 
     <arg value="ps"/>
     <arg name="colors"/>
@@ -22,7 +20,9 @@
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
         <exclude name="WordPress.DB.SlowDBQuery.slow_db_query_tax_query" />
         <exclude name="WordPress.Files.FileName" />
+        <exclude name="WordPress.WP.GlobalVariablesOverride.Prohibited" />
     </rule>
     <rule ref="WordPress-Extra"/>
     <rule ref="WordPress-Docs"/>
+    <rule ref="PHPCompatibilityWP" />
 </ruleset>

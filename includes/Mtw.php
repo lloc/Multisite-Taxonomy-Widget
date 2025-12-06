@@ -70,7 +70,7 @@ class Mtw extends \WP_Widget {
 				if ( $filter ) {
 					$content[] = apply_filters( 'mtw_widget_output_filter', $post, $instance );
 				} else {
-					$content[] = Posts::build_link( $post, $instance );
+					$content[] = $post->build_link( $instance );
 				}
 
 				$content[] = $args['after_mtw_item'];

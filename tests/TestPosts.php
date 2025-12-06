@@ -2,6 +2,7 @@
 
 namespace lloc\MtwTests;
 
+use lloc\Mtw\Post;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
@@ -11,23 +12,25 @@ class TestPosts extends MtwUnitTestCase {
 
 	public static function get_data(): array {
 		return array(
-			array( 'a', 'b', -1 ),
-			array( 'b', 'a', 1 ),
-			array( 'a', 'a', 0 ),
+			array( 1, 2, -1 ),
+			array( 2, 1, 1 ),
+			array( 1, 1, 0 ),
 		);
 	}
 
 	#[DataProvider( 'get_data' )]
 	public function test_compare_posts( $one, $two, $expected ) {
-		$test = new Posts();
+		$wp_post     = \Mockery::mock( \WP_Post::class );
+		$wp_post->ID = random_int( 1, 1000 );
 
-		$a = \Mockery::mock( \WP_Post::class );
-		$b = \Mockery::mock( \WP_Post::class );
+		Functions\expect( 'get_the_time' )->twice()->andReturn( $one, $two );
+		Functions\expect( 'get_permalink' )->twice()->andReturn( 'http://example.com' );
+		Functions\expect( 'get_the_post_thumbnail' )->twice()->andReturn( '<img src="thumbnail.jpg" />' );
 
-		$a->mtw_ts = $one;
-		$b->mtw_ts = $two;
+		$a = new Post( $wp_post );
+		$b = new Post( $wp_post );
 
-		$this->assertEquals( $expected, $test->cmp_posts( $a, $b ) );
+		$this->assertEquals( $expected, Posts::cmp_posts( $a, $b ) );
 	}
 
 	public function test_create_shortcode() {
@@ -132,12 +135,19 @@ class TestPosts extends MtwUnitTestCase {
 	}
 
 	public function test_get_thumbnail_has_filter() {
-		$post = \Mockery::mock( '\WP_Post' );
+		$wp_post     = \Mockery::mock( '\WP_Post' );
+		$wp_post->ID = random_int( 1, 1000 );
+
+		Functions\expect( 'get_the_time' )->once()->andReturn( random_int( 1, 1000 ) );
+		Functions\expect( 'get_permalink' )->once()->andReturn( 'http://example.com' );
+		Functions\expect( 'get_the_post_thumbnail' )->once()->andReturn( '<img src="thumbnail.jpg" />' );
+
+		$post = new Post( $wp_post );
 
 		Functions\expect( 'has_filter' )->once()->with( 'mtw_thumbnail_output_filter' )->andReturnTrue();
 
 		Filters\expectApplied( 'mtw_thumbnail_output_filter' )->once()->andReturn( 'Test' );
 
-		$this->assertEquals( 'Test', ( new Posts() )->get_thumbnail( $post, array() ) );
+		$this->assertEquals( 'Test', $post->get_thumbnail( array() ) );
 	}
 }
