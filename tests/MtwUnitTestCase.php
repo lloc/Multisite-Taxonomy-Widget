@@ -8,6 +8,9 @@ use Brain\Monkey\Functions;
 
 class MtwUnitTestCase extends TestCase {
 
+	/**
+	 * @var mixed
+	 */
 	protected $test;
 
 	protected function setUp(): void {

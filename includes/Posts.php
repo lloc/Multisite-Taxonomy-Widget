@@ -9,25 +9,9 @@ namespace lloc\Mtw;
  */
 class Posts {
 
-	/**
-	 * Get thumbnail
-	 *
-	 * @param \WP_Post $post
-	 * @param array    $atts
-	 *
-	 * @return string
-	 */
-	public static function get_thumbnail( \WP_Post $post, array $atts ): string {
-		if ( has_filter( 'mtw_thumbnail_output_filter' ) ) {
-			return apply_filters( 'mtw_thumbnail_output_filter', $post, $atts );
-		}
+	const MTW_SHORTCODE_OUTPUT_FILTER = 'mtw_shortcode_output_filter';
 
-		if ( empty( $atts['thumbnail'] ) ) {
-			return '';
-		}
-
-		return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $post->mtw_href ), $post->mtw_thumb );
-	}
+	const MTW_POSTS_NO_POSTS_FOUND = 'mtw_posts_no_posts_found';
 
 	/**
 	 * Create shortcode
@@ -40,29 +24,20 @@ class Posts {
 		$posts = self::get_posts_from_network( $atts );
 
 		if ( empty( $posts ) ) {
-			return apply_filters( 'mtw_posts_no_posts_found', '' );
+			return apply_filters( self::MTW_POSTS_NO_POSTS_FOUND, '' );
 		}
 
 		$list = array();
 		foreach ( $posts as $post ) {
-			if ( has_filter( 'mtw_shortcode_output_filter' ) ) {
-				$list[] = apply_filters( 'mtw_shortcode_output_filter', $post, $atts );
+			if ( has_filter( self::MTW_SHORTCODE_OUTPUT_FILTER ) ) {
+				$list[] = apply_filters( self::MTW_SHORTCODE_OUTPUT_FILTER, $post, $atts );
 				continue;
 			}
 
-			$list[] = self::build_link( $post, $atts );
+			$list[] = $post->build_link( $atts );
 		}
 
 		return sprintf( '<ul><li>%s</li></ul>', implode( '</li><li>', $list ) );
-	}
-
-	public static function build_link( \WP_Post $post, array $atts ): string {
-		return sprintf(
-			'%1$s <a href="%2$s">%3$s</a>',
-			self::get_thumbnail( $post, $atts ),
-			esc_url( $post->mtw_href ),
-			apply_filters( 'the_title', $post->post_title )
-		);
 	}
 
 	/**
@@ -90,11 +65,7 @@ class Posts {
 		$ts_size = ( ! empty( $instance['thumbnail'] ) ? array( (int) $instance['thumbnail'], (int) $instance['thumbnail'] ) : 'thumbnail' );
 
 		foreach ( get_posts( $args ) as $post ) {
-			$post->mtw_ts    = get_the_time( 'U', $post->ID );
-			$post->mtw_href  = get_permalink( $post->ID );
-			$post->mtw_thumb = get_the_post_thumbnail( $post->ID, $ts_size );
-
-			$posts[] = $post;
+			$posts[] = new Post( $post, $ts_size );
 		}
 
 		usort( $posts, array( self::class, 'cmp_posts' ) );
@@ -105,13 +76,13 @@ class Posts {
 	/**
 	 * Compare posts
 	 *
-	 * @param \WP_Post $a
-	 * @param \WP_Post $b
+	 * @param Post $a
+	 * @param Post $b
 	 *
 	 * @return int
 	 */
-	public static function cmp_posts( \WP_Post $a, \WP_Post $b ): int {
-		return $a->mtw_ts <=> $b->mtw_ts;
+	public static function cmp_posts( Post $a, Post $b ): int {
+		return $a->timestamp() <=> $b->timestamp();
 	}
 
 	/**

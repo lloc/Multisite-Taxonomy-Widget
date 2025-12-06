@@ -3,7 +3,6 @@
 namespace lloc\MtwTests;
 
 use Brain\Monkey\Filters;
-use Brain\Monkey\Functions;
 use lloc\Mtw\FormatElements;
 
 class TestFormatElements extends MtwUnitTestCase {
@@ -21,7 +20,7 @@ class TestFormatElements extends MtwUnitTestCase {
 			'after_title'     => '',
 		);
 
-		Filters\expectApplied( 'mtw_formatelements_output_filter' )->once()->andReturnFirstArg();
+		Filters\expectApplied( FormatElements::MTW_FORMATELEMENTS_OUTPUT_FILTER )->once()->andReturnFirstArg();
 
 		$test = new FormatElements( array( 'test' => 'abc' ) );
 

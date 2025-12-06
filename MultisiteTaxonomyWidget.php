@@ -10,7 +10,7 @@
  * Plugin Name: Multisite Taxonomy Widget
  * Plugin URI: https://wordpress.org/plugins/multisite-taxonomy-widget/
  * Description: List the latest posts of a specific taxonomy from your blog-network.
- * Version: 1.3.0
+ * Version: 1.3.1
  * Author: Dennis Ploetner
  * Author URI: http://lloc.de/
  * Text Domain: multisite-taxonomy-widget

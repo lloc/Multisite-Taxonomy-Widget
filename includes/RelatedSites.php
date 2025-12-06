@@ -35,7 +35,7 @@ class RelatedSites {
 		$sites = array_filter(
 			get_sites( $args ),
 			function ( $site ) {
-				return $this->current_site !== $site->blog_id;
+				return $this->current_site !== (int) $site->blog_id;
 			}
 		);
 
